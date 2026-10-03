@@ -1,0 +1,87 @@
+{
+  "task_id": "RS-20261003-G2",
+  "revision": "r1",
+  "timestamp": "2026-10-03T22:53:41.807254+01:00",
+  "runner_commit": "4fcfadfb02e2c50e0dffde7b12ec6f2336fd1bd8",
+  "contract_commit": "4d32d28a290c2c14baf6de497968a4584f20f4da",
+  "gpu_attempts": 2,
+  "remaining_slots": 0,
+  "sequential": true,
+  "results": [
+    {
+      "seed": 42,
+      "status": "passed",
+      "result_status": "succeeded",
+      "accuracy": 0.5646,
+      "loss": 1.2003214321136475,
+      "elapsed_seconds": 6.282014088001233,
+      "training_validation_seconds": 0.6477046320014779,
+      "config_hash": "ad62ac0451c300dd62242aa099bc5bf82d8100e55857a8901d8811ed608e324a",
+      "request_result_binding": "passed",
+      "full_scale": "45000/5000",
+      "split_hash": "passed",
+      "data_hash": "passed",
+      "official_test_read": false,
+      "device": {
+        "actual_device": "cuda",
+        "capability": [
+          12,
+          0
+        ],
+        "driver": "580.173.02",
+        "gpu": "NVIDIA GeForce RTX 5090"
+      }
+    },
+    {
+      "seed": 43,
+      "status": "passed",
+      "result_status": "succeeded",
+      "accuracy": 0.5686,
+      "loss": 1.1968097543716432,
+      "elapsed_seconds": 6.23312706499928,
+      "training_validation_seconds": 0.6270552330006467,
+      "config_hash": "3b76a325fdd9fb5274fae31069a3730952492ec3be9ade20a963ee3c70d5139f",
+      "request_result_binding": "passed",
+      "full_scale": "45000/5000",
+      "split_hash": "passed",
+      "data_hash": "passed",
+      "official_test_read": false,
+      "device": {
+        "actual_device": "cuda",
+        "capability": [
+          12,
+          0
+        ],
+        "driver": "580.173.02",
+        "gpu": "NVIDIA GeForce RTX 5090"
+      }
+    }
+  ],
+  "reference_01": {
+    "source": "user supplied G2 instruction; original 01 raw artifacts not independently fetched",
+    "seed": 42,
+    "accuracy": "0.5646",
+    "loss": "1.2003214321"
+  },
+  "comparison": {
+    "seed42_accuracy_delta_vs_01": "0.0000",
+    "seed42_loss_delta_vs_01": "1.36475E-11",
+    "seed43_accuracy_delta_vs_seed42": "0.0040",
+    "seed43_loss_delta_vs_seed42": "-0.0035116777420043",
+    "accuracy_match": "passed_exact_at_supplied_precision",
+    "loss_match": "passed_at_supplied_10_decimal_places",
+    "cross_driver_bitwise_equivalence": "unknown",
+    "relative_speed": "unknown",
+    "statistical_significance": "unknown"
+  },
+  "cpu_tests": {
+    "passed": 56,
+    "classification": "CPU tests include mocked runner outcomes; separate from real GPU runs"
+  },
+  "preflight": "passed_without_CUDA_initialization",
+  "unknowns": [
+    "No independent verification of full 01 raw results/provenance",
+    "No cross-host speed or significance inference",
+    "No real GPU failure/timeout injection; those paths are CPU/mock tests"
+  ]
+}
