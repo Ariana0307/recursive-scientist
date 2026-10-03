@@ -1,0 +1,51 @@
+{
+  "source_task": "RS-20261003-G3",
+  "source_commit": "931049af15ddafa12a5163e924a3ea84bbfbbf3f",
+  "observations": [
+    {
+      "seed": 42,
+      "accuracy": 0.6712,
+      "loss": 0.9177892036437988,
+      "config_hash": "19cf7cb70f38db70f268fa620e8373d786c8c3581f14df08095bce4be7a94de7",
+      "experiment_id": "G3-r1-baseline-seed-42",
+      "result_sha256": "15a983a85b0458d6437c752cf339636cceb5d4ad982576a820dca5210e5a7542",
+      "request_sha256": "e42bd0c2aad70773084caba8ee1a9b04f82a16597c080008bbf5710668b7260a"
+    },
+    {
+      "seed": 43,
+      "accuracy": 0.6636,
+      "loss": 0.9473237369537354,
+      "config_hash": "147f677ca56c5174f3a473d3edbddc15869a7234bc5e2e413af1265e0bbbf209",
+      "experiment_id": "G3-r1-baseline-seed-43",
+      "result_sha256": "9990a5c08c2d0443a9de4dbc398f135c673bd9eba28a426a1896d3a3fec6b9c6",
+      "request_sha256": "8bcff590eecb3141502d1b59123beb2eb5be747897d79e0c626a482074ade2ab"
+    },
+    {
+      "seed": 44,
+      "accuracy": 0.6564,
+      "loss": 0.957753829574585,
+      "config_hash": "d673493bf3a6f91f7f6b6e16294828dc33803f648f30b54689336ac5e4229786",
+      "experiment_id": "G3-r1-baseline-seed-44",
+      "result_sha256": "de0df831a67ec91b7e4efd9bfb468a98010a592c5dc61fad34a8ff421c85d754",
+      "request_sha256": "007795e682709d63e303c1444f624ba3dc285481bf02fc634a1fbf3d3c22810c"
+    }
+  ],
+  "mean_accuracy": 0.6637333333333333,
+  "sample_sigma_ddof1": 0.007400900846068241,
+  "exploratory_two_sigma": 0.014801801692136482,
+  "threshold_interpretation": "exploratory_only_not_significance",
+  "fixed_config": {
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "augmentation": "none",
+    "epochs": 3,
+    "batch_size": 128,
+    "split_seed": 20261003,
+    "model": "small-cnn-v1",
+    "dataset": "cifar10-python-v1",
+    "timeout_seconds": 300
+  },
+  "split_indices_hash": "48a8983fa5fdf95d137855c818b7bc716c476396dbe5b274eec41982b27e815e",
+  "historical_one_epoch_pilots_included": false,
+  "new_training_this_task": 0
+}
