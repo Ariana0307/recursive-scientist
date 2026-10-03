@@ -29,3 +29,6 @@ recursive-scientist-local/
 # Handoffs are reviewed locally, not auto-published
 debug_current/
 *.zip
+
+# Test caches
+.pytest_cache/
