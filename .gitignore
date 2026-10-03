@@ -1,0 +1,31 @@
+# Credentials and environments
+.env
+.env.*
+!.env.example
+secrets/
+*.pem
+*.key
+*.p12
+*credentials*.json
+*token*.json
+.venv/
+venv/
+__pycache__/
+*.pyc
+node_modules/
+# Private inputs and raw outputs
+reference/
+data/
+datasets/
+weights/
+checkpoints/
+runs/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.log
+recursive-scientist-local/
+# Handoffs are reviewed locally, not auto-published
+debug_current/
+*.zip
