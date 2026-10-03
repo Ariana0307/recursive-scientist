@@ -1,0 +1,10 @@
+{
+  "split_id": "cifar10-train45000-val5000-pcg64-v1",
+  "split_seed": 20261003,
+  "numpy_version": "2.2.6",
+  "algorithm": "Generator(PCG64(seed)).permutation(50000); first 5000 validation; rest train; sort each",
+  "train_count": 45000,
+  "validation_count": 5000,
+  "split_indices_hash": "48a8983fa5fdf95d137855c818b7bc716c476396dbe5b274eec41982b27e815e",
+  "hash_encoding": "SHA256 of RFC8785 object with train and validation integer arrays"
+}

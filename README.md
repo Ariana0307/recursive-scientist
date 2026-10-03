@@ -2,7 +2,7 @@
 
 Omnigent will coordinate scientific agents proposing ML experiments; independent GPU workers will execute them and return real results for subsequent decisions.
 
-Gate 0 contains repository structure and interface contracts only. No training, web application, fabricated metrics, or validated multi-agent loop is included.
+G1 publishes executable, tested experiment contracts for a fixed small CNN on CIFAR-10. The runner, web application and multi-agent loop are not implemented here. Only worker 01 is authorized for up to two bounded GPU validation attempts after contract release; see AGENTS.md and docs/interfaces.md.
 
 Code lives in this repository. Private references, datasets, runs, credentials and handoffs live outside it in `~/recursive-scientist-local/`. Original references are read-only; every run gets a new experiment_id directory.
 
