@@ -38,6 +38,10 @@ class Closed(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True, allow_inf_nan=False)
 
 
+class Ready(Closed):
+    status: Literal['OMNIGENT_READY']
+
+
 class Evidence(Closed):
     role: Literal['Evidence']
     finding: Literal['three_seed_baseline_only']
@@ -151,6 +155,8 @@ class GuardedTransport(httpx.AsyncBaseTransport):
         # Official OpenAI-compatible structured-output field; added by trusted controller.
         if self.schema is not None:
             body['response_format']={'type':'json_schema','json_schema':{'name':self.role,'strict':True,'schema':self.schema}}
+        body['stream_options'] = {'include_usage': True}
+        body['temperature'] = 0
         raw = json.dumps(body,allow_nan=False).encode()
         headers = dict(request.headers); headers.pop('content-length',None)
         outgoing = httpx.Request('POST',request.url,headers=headers,content=raw,extensions=request.extensions)
@@ -231,7 +237,7 @@ async def run(root, baseline):
             save(attempt/f'{role}-failure.json',{'type':type(exc).__name__,'message':str(exc),'events':events})
             raise
     try:
-        await turn('Ready',{'request':'OMNIGENT_READY'})
+        await turn('Ready',{'request':'Return status OMNIGENT_READY as JSON'},Ready)
         previous=None
         await turn('Evidence',baseline,Evidence)
         hypotheses=await turn('Hypothesis',{'baseline':baseline,'requirement':'two distinct testable exploratory directions with predictions'},Hypothesis)
