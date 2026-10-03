@@ -156,4 +156,7 @@ def train_job(request, packages, attempt, context):
     else:
         if len(train_ids) != 45000 or count != 5000:
             raise RuntimeError('full split required for success')
+        if context.get('save_state_dict'):
+            from runner.model_artifact import stage
+            stage(model, attempt, request, context['evaluation_sha256'])
         json_new(attempt / 'outcome.json', {'status': 'succeeded', 'metrics': {'accuracy': correct / count, 'loss': loss_sum / count}, 'error': None})
