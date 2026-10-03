@@ -1,0 +1,218 @@
+{
+  "$defs": {
+    "Parameters": {
+      "additionalProperties": false,
+      "properties": {
+        "learning_rate": {
+          "enum": [
+            0.0003,
+            0.001,
+            0.003
+          ],
+          "title": "Learning Rate",
+          "type": "number"
+        },
+        "weight_decay": {
+          "enum": [
+            0.0,
+            0.0001,
+            0.001
+          ],
+          "title": "Weight Decay",
+          "type": "number"
+        },
+        "augmentation": {
+          "enum": [
+            "none",
+            "basic"
+          ],
+          "title": "Augmentation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "learning_rate",
+        "weight_decay",
+        "augmentation"
+      ],
+      "title": "Parameters",
+      "type": "object"
+    },
+    "Trial": {
+      "additionalProperties": false,
+      "properties": {
+        "arm": {
+          "enum": [
+            "random",
+            "ai"
+          ],
+          "title": "Arm",
+          "type": "string"
+        },
+        "seed": {
+          "maximum": 4294967295,
+          "minimum": 0,
+          "title": "Seed",
+          "type": "integer"
+        },
+        "random_parameters": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Parameters"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "arm",
+        "seed",
+        "random_parameters"
+      ],
+      "title": "Trial",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "plan_version": {
+      "const": "1.0.0",
+      "title": "Plan Version",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "approved_for_future_execution"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "campaign_id": {
+      "maxLength": 55,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$",
+      "title": "Campaign Id",
+      "type": "string"
+    },
+    "task_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$",
+      "title": "Task Id",
+      "type": "string"
+    },
+    "role": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$",
+      "title": "Role",
+      "type": "string"
+    },
+    "worker_id": {
+      "enum": [
+        "worker-01",
+        "worker-02"
+      ],
+      "title": "Worker Id",
+      "type": "string"
+    },
+    "max_starts": {
+      "maximum": 6,
+      "minimum": 1,
+      "title": "Max Starts",
+      "type": "integer"
+    },
+    "epochs": {
+      "maximum": 3,
+      "minimum": 3,
+      "title": "Epochs",
+      "type": "integer"
+    },
+    "batch_size": {
+      "maximum": 128,
+      "minimum": 128,
+      "title": "Batch Size",
+      "type": "integer"
+    },
+    "split_seed": {
+      "maximum": 20261003,
+      "minimum": 20261003,
+      "title": "Split Seed",
+      "type": "integer"
+    },
+    "split_id": {
+      "const": "cifar10-train45000-val5000-pcg64-v1",
+      "title": "Split Id",
+      "type": "string"
+    },
+    "split_indices_hash": {
+      "title": "Split Indices Hash",
+      "type": "string"
+    },
+    "model": {
+      "const": "small-cnn-v1",
+      "title": "Model",
+      "type": "string"
+    },
+    "dataset": {
+      "const": "cifar10-python-v1",
+      "title": "Dataset",
+      "type": "string"
+    },
+    "timeout_seconds": {
+      "maximum": 300,
+      "minimum": 300,
+      "title": "Timeout Seconds",
+      "type": "integer"
+    },
+    "evaluation_sha256": {
+      "const": "68d34bb53116e8d1debc77b65b08320c52836a5b31414a7a32239b33b5d79bc7",
+      "title": "Evaluation Sha256",
+      "type": "string"
+    },
+    "candidate_space": {
+      "additionalProperties": {
+        "items": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "type": "array"
+      },
+      "title": "Candidate Space",
+      "type": "object"
+    },
+    "trials": {
+      "items": {
+        "$ref": "#/$defs/Trial"
+      },
+      "title": "Trials",
+      "type": "array"
+    }
+  },
+  "required": [
+    "plan_version",
+    "status",
+    "campaign_id",
+    "task_id",
+    "role",
+    "worker_id",
+    "max_starts",
+    "epochs",
+    "batch_size",
+    "split_seed",
+    "split_id",
+    "split_indices_hash",
+    "model",
+    "dataset",
+    "timeout_seconds",
+    "evaluation_sha256",
+    "candidate_space",
+    "trials"
+  ],
+  "title": "SearchPlan",
+  "type": "object"
+}
