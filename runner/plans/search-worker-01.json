@@ -1,0 +1,78 @@
+{
+  "plan_version": "1.0.0",
+  "status": "draft",
+  "campaign_id": "G4-example-search-worker-01",
+  "task_id": "RS-20261003-G4",
+  "role": "01_train",
+  "worker_id": "worker-01",
+  "max_starts": 6,
+  "epochs": 3,
+  "batch_size": 128,
+  "split_seed": 20261003,
+  "split_id": "cifar10-train45000-val5000-pcg64-v1",
+  "split_indices_hash": "48a8983fa5fdf95d137855c818b7bc716c476396dbe5b274eec41982b27e815e",
+  "model": "small-cnn-v1",
+  "dataset": "cifar10-python-v1",
+  "timeout_seconds": 300,
+  "evaluation_sha256": "68d34bb53116e8d1debc77b65b08320c52836a5b31414a7a32239b33b5d79bc7",
+  "candidate_space": {
+    "learning_rate": [
+      0.0003,
+      0.001,
+      0.003
+    ],
+    "weight_decay": [
+      0.0,
+      0.0001,
+      0.001
+    ],
+    "augmentation": [
+      "none",
+      "basic"
+    ]
+  },
+  "trials": [
+    {
+      "arm": "random",
+      "seed": 42,
+      "random_parameters": {
+        "learning_rate": 0.003,
+        "weight_decay": 0.001,
+        "augmentation": "basic"
+      }
+    },
+    {
+      "arm": "ai",
+      "seed": 42,
+      "random_parameters": null
+    },
+    {
+      "arm": "random",
+      "seed": 43,
+      "random_parameters": {
+        "learning_rate": 0.001,
+        "weight_decay": 0.0,
+        "augmentation": "basic"
+      }
+    },
+    {
+      "arm": "ai",
+      "seed": 43,
+      "random_parameters": null
+    },
+    {
+      "arm": "random",
+      "seed": 44,
+      "random_parameters": {
+        "learning_rate": 0.001,
+        "weight_decay": 0.001,
+        "augmentation": "none"
+      }
+    },
+    {
+      "arm": "ai",
+      "seed": 44,
+      "random_parameters": null
+    }
+  ]
+}
