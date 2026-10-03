@@ -1,0 +1,63 @@
+{
+  "status": "FROZEN_SCHEDULE_PROPOSAL_NOT_EXECUTION_AUTHORITY",
+  "formal_search_started": false,
+  "rounds": [
+    {
+      "round": 1,
+      "training_seed": 42,
+      "random_worker": "5090-01",
+      "ai_worker": "5090-02",
+      "epochs": 3,
+      "status": "WAITING_NO_AUTHORIZATION"
+    },
+    {
+      "round": 2,
+      "training_seed": 43,
+      "random_worker": "5090-02",
+      "ai_worker": "5090-01",
+      "epochs": 3,
+      "status": "WAITING_NO_AUTHORIZATION"
+    },
+    {
+      "round": 3,
+      "training_seed": 44,
+      "random_worker": "5090-01",
+      "ai_worker": "5090-02",
+      "epochs": 3,
+      "status": "WAITING_NO_AUTHORIZATION"
+    },
+    {
+      "round": 4,
+      "training_seed": 45,
+      "random_worker": "5090-02",
+      "ai_worker": "5090-01",
+      "epochs": 3,
+      "status": "WAITING_NO_AUTHORIZATION"
+    },
+    {
+      "round": 5,
+      "training_seed": 46,
+      "random_worker": "5090-01",
+      "ai_worker": "5090-02",
+      "epochs": 3,
+      "status": "WAITING_NO_AUTHORIZATION"
+    },
+    {
+      "round": 6,
+      "training_seed": 47,
+      "random_worker": "5090-02",
+      "ai_worker": "5090-01",
+      "epochs": 3,
+      "status": "WAITING_NO_AUTHORIZATION"
+    }
+  ],
+  "confirmation_seeds": [
+    1001,
+    1002,
+    1003
+  ],
+  "confirmation_budget": "separate authorization required",
+  "random_candidate_list": "WAITING",
+  "ai_information": "common baseline and own past results only; no early random scores",
+  "gpu_authorization_this_task": 0
+}
