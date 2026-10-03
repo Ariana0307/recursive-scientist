@@ -125,7 +125,8 @@ class TimedStream(httpx.AsyncByteStream):
 
 class GuardedTransport(httpx.AsyncBaseTransport):
     """Checks every generation dispatch, including SDK/Omnigent internal retries."""
-    def __init__(self, root, inner=None):
+    def __init__(self, root, inner=None, allowed_tool_names=()):
+        self.allowed_tool_names = frozenset(allowed_tool_names)
         self.root = root
         self.inner = inner or httpx.AsyncHTTPTransport(retries=0, trust_env=False)
         self.role = 'unset'
@@ -139,8 +140,11 @@ class GuardedTransport(httpx.AsyncBaseTransport):
         body = json.loads(await request.aread())
         if request.method != 'POST' or body.get('model') != MODEL:
             raise ValueError('non-allowlisted model request')
-        if body.get('tools') or body.get('functions'):
-            raise ValueError('tools forbidden')
+        if body.get('functions'):
+            raise ValueError('legacy functions forbidden')
+        for tool in body.get('tools', []):
+            if tool.get('type') != 'function' or tool.get('function', {}).get('name') not in self.allowed_tool_names:
+                raise ValueError('tools forbidden')
         if type(body.get('max_tokens')) is not int or not 1 <= body['max_tokens'] <= MAX_TOKENS:
             raise ValueError('serialized token cap absent or too high')
         limits = request.extensions.get('timeout',{})
@@ -150,7 +154,7 @@ class GuardedTransport(httpx.AsyncBaseTransport):
             raise ValueError('thinking must be explicitly disabled')
         if self.executor is not None:
             states = list(self.executor._session_states.values())
-            if not states or any(s.agent is None or s.agent.tools or s.agent.handoffs or s.agent.mcp_servers for s in states):
+            if not states or any(s.agent is None or any(t.name not in self.allowed_tool_names for t in s.agent.tools) or s.agent.handoffs or s.agent.mcp_servers for s in states):
                 raise ValueError('actual SDK agent exposes unexpected capabilities')
         # Official OpenAI-compatible structured-output field; added by trusted controller.
         if self.schema is not None:
@@ -166,7 +170,7 @@ class GuardedTransport(httpx.AsyncBaseTransport):
             if len(existing)>=MAX_REQUESTS: raise ValueError('six generation request budget exhausted')
             n=len(existing)+1
             save(self.root/f'request-{n:02}.json',{'number':n,'role':self.role,'model':MODEL,
-                 'max_tokens':body['max_tokens'],'timeout_seconds':TIMEOUT,'tool_count':0,
+                 'max_tokens':body['max_tokens'],'timeout_seconds':TIMEOUT,'tool_count':len(body.get('tools', [])),
                  'payload':body,'payload_sha256':hashlib.sha256(raw).hexdigest()})
         deadline=asyncio.get_running_loop().time()+TIMEOUT
         try:
