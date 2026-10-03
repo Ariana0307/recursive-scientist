@@ -1,0 +1,55 @@
+{
+  "schema_version": "g3-proposal-1",
+  "status": "proposal_only_not_executable",
+  "training_authorized": false,
+  "total_attempt_budget": 24,
+  "stages": {
+    "baseline": 3,
+    "random_search": 6,
+    "ai_search": 6,
+    "confirmation": 9
+  },
+  "confirmation_groups": 3,
+  "confirmation_attempts_per_group": 3,
+  "failures_and_retries_consume_budget": true,
+  "fixed": {
+    "epochs": 3,
+    "batch_size": 128,
+    "timeout_seconds": 300,
+    "split_seed": 20261003,
+    "model": "small-cnn-v1",
+    "dataset": "cifar10-python-v1",
+    "split_id": "cifar10-train45000-val5000-pcg64-v1"
+  },
+  "search_space": {
+    "learning_rate": [
+      0.0003,
+      0.001,
+      0.003
+    ],
+    "weight_decay": [
+      0.0,
+      0.0001,
+      0.001
+    ],
+    "augmentation": [
+      "none",
+      "basic"
+    ]
+  },
+  "baseline": {
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "augmentation": "none"
+  },
+  "comparison_requirements": [
+    "identical candidate space, fixed architecture, epochs, batch size and data split across strategies",
+    "pre-register seeds and random sampling algorithm before dispatch",
+    "three confirmation groups use the same new three-seed set",
+    "official test set remains unused",
+    "one-epoch historical pilots excluded from all formal comparisons",
+    "failed attempts remain explicit; no replacement accuracy",
+    "AI roles select only allowed variable/direction; trusted controller samples numeric values",
+    "candidate selection, retry rules and stopping must be frozen before campaign approval"
+  ]
+}
