@@ -20,7 +20,10 @@ class Boundaries(unittest.TestCase):
             with tempfile.TemporaryDirectory() as d:
                 def never(request):self.fail('unsafe request reached transport')
                 t=GuardedTransport(Path(d),httpx.MockTransport(never))
-                for req in [self.request(max_tokens=1001),self.request(max_tokens=None),self.request(tools=[{'type':'function'}]),self.request(model='cloud'),self.request(reasoning_effort='high'),httpx.Request('POST','https://example.com',json={})]:
+                missing_timeout=self.request(); missing_timeout.extensions.clear()
+                unbounded_timeout=self.request(); unbounded_timeout.extensions['timeout']['read']=None
+                excessive_timeout=self.request(); excessive_timeout.extensions['timeout']['read']=121
+                for req in [missing_timeout,unbounded_timeout,excessive_timeout,self.request(max_tokens=1001),self.request(max_tokens=None),self.request(tools=[{'type':'function'}]),self.request(model='cloud'),self.request(reasoning_effort='high'),httpx.Request('POST','https://example.com',json={})]:
                     with self.assertRaises(ValueError):await t.handle_async_request(req)
                 self.assertEqual(list(Path(d).glob('request-*.json')),[])
                 await t.aclose()
