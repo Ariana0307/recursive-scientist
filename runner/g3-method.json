@@ -1,0 +1,43 @@
+{
+  "task_id": "RS-20261003-G3",
+  "revision": "r1",
+  "role": "01_train",
+  "campaign_id": "RS-20261003-G3-r1-01-baseline",
+  "base_runner_commit": "4fcfadfb02e2c50e0dffde7b12ec6f2336fd1bd8",
+  "max_starts": 3,
+  "timeout_seconds": 300,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "fixed_config": {
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "augmentation": "none",
+    "epochs": 3,
+    "batch_size": 128,
+    "split_seed": 20261003,
+    "model": "small-cnn-v1",
+    "dataset": "cifar10-python-v1",
+    "timeout_seconds": 300
+  },
+  "train_count": 45000,
+  "validation_count": 5000,
+  "test_scoring": false,
+  "optimizer": "Adam, betas=(0.9,0.999), eps=1e-8",
+  "training_semantics": "same as G1; no model, split, preprocessing or score formula changes",
+  "evaluation_sha256": "68d34bb53116e8d1debc77b65b08320c52836a5b31414a7a32239b33b5d79bc7",
+  "statistics": {
+    "source": "only the three G3 final validation accuracies in seed order",
+    "mean": "arithmetic mean",
+    "sigma": "sample standard deviation, ddof=1",
+    "two_sigma": "exploratory noise threshold, never significance proof",
+    "missing_or_failed": "retain every attempt; if any seed missing/non-success, three-seed mean/sigma=null; no automatic retries",
+    "g1_pilot": "excluded"
+  },
+  "best_so_far": "program only; append record on strict accuracy improvement; ties/worse never replace incumbent",
+  "authority": "trusted operator only; model-facing interface accepts closed Config JSON; no model filesystem/shell or authorization command access",
+  "new_authorization": "explicit G3 user instruction; preserve G1 ledger unchanged; no deletion/reset/directory-based bypass",
+  "rollback": "stop G3 dispatch; retain campaign and authority files, all results and G1/G2; original worktree remains at base commit; no reset or quota refund"
+}

@@ -22,10 +22,10 @@ def stop_group(proc):
     proc.wait()
 
 
-def supervise(command, timeout, log, env):
+def supervise(command, timeout, log, env, pass_fds=()):
     start = time.monotonic()
     proc = subprocess.Popen(command, start_new_session=True, stdout=log,
-                            stderr=subprocess.STDOUT, env=env)
+                            stderr=subprocess.STDOUT, env=env, pass_fds=pass_fds)
     try:
         try:
             proc.wait(timeout=max(0, timeout - (time.monotonic() - start)))

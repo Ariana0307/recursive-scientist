@@ -69,6 +69,11 @@ def child(attempt):
     if reservation != context['quota']:
         raise RuntimeError('child reservation differs')
     atomic_new(attempt / 'child-started', b'one child process per quota reservation\n')
+    train_job(request, packages, attempt, context)
+
+
+def train_job(request, packages, attempt, context):
+    # Called only after either the legacy guard or G3 parent+child authorization.
     os.environ['CUBLAS_WORKSPACE_CONFIG'] = ':4096:8'
     import numpy as np
     import torch
@@ -99,6 +104,8 @@ def child(attempt):
         'cublas_workspace_config': ':4096:8', 'num_workers': 0,
         'rng': 'Python random.seed; NumPy legacy seed; torch.manual_seed and cuda.manual_seed_all; dedicated CPU torch.Generator(seed) shared sequentially by randperm shuffle and per-image randint(0,9,(2,))/rand flip; no DataLoader worker RNG',
         'mode': context['mode'], 'subset_is_benchmark': False,
+        'campaign_id': context.get('campaign_id'),
+        'evaluation_sha256': context.get('evaluation_sha256'),
     })
     freeze = '\n'.join(f'{k}=={v}' for k, v in sorted(packages.items())) + '\n'
     atomic_new(attempt / 'environment-freeze.txt', freeze.encode())
@@ -130,18 +137,13 @@ def child(attempt):
             loss.backward()
             optimizer.step()
         print(json.dumps({'epoch': epoch + 1, 'training_samples': len(train_ids)}), flush=True)
-    model.eval()
-    correct, loss_sum, count = 0, 0.0, 0
-    with torch.no_grad():
-        for idx in val_ids.split(request.config.batch_size):
-            target = y[idx].to(device)
-            logits = model(preprocess(x[idx], 'none', generator).to(device))
-            loss = criterion(logits, target)
-            if not torch.isfinite(loss):
-                raise RuntimeError('nonfinite validation loss')
-            loss_sum += loss.item() * len(idx)
-            correct += (logits.argmax(1) == target).sum().item()
-            count += len(idx)
+    from runner.evaluate import evaluate
+    predictions = [] if context.get('campaign_id') else None
+    correct, loss_sum, count = evaluate(model, x, y, val_ids, request.config.batch_size,
+                                       device, generator, criterion, predictions)
+    if predictions is not None:
+        json_new(attempt / 'predictions.json', {'columns': ['train_index', 'target', 'predicted'],
+                                               'rows': predictions, 'split': 'validation-only'})
     torch.cuda.synchronize()
     json_new(attempt / 'execution.json', {'train_count': len(train_ids), 'validation_count': count,
                                          'epochs': 1 if smoke else request.config.epochs,
