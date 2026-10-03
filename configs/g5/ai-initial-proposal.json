@@ -1,0 +1,22 @@
+{
+  "task_id": "RS-20261004-G5",
+  "revision": "r1",
+  "status": "draft_not_authorized",
+  "ai_trial": 1,
+  "round": 1,
+  "seed": 42,
+  "worker_id": "worker-02",
+  "role": "02_deploy",
+  "parameters": {
+    "learning_rate": 0.003,
+    "weight_decay": 0.0001,
+    "augmentation": "none"
+  },
+  "source_task": "RS-20261003-G4",
+  "source_model": "qwen3:4b",
+  "source_session_id": "G4-attempt-1791068101757644103-Planner",
+  "source_planner_output_hash": "180d0a66cd0dca01c2814875a24bdbcf30aef8955b82565053a39b26641140df",
+  "source_planner_record_sha256": "b31e68f07d60747dec2128b54b83495a7eadfbb76581a96407253695331f7c35",
+  "source_sampled_proposal_sha256": "8bee750e6e823146408133e9cea2532ffc6dd449a047c16c5e7bd124473afc3d",
+  "interpretation": "Real G4 Planner selected direction; trusted G4 sampler supplied the numeric value. No new model call."
+}

@@ -1,0 +1,23 @@
+{
+  "task_id": "RS-20261004-G5",
+  "revision": "r1",
+  "status": "draft_no_authorization",
+  "frozen_at": "2026-10-04T00:30:23.687798+01:00",
+  "normalization": "RFC8785 via rfc8785 0.1.4; SHA256",
+  "plan_hashes": {
+    "worker-01": "920fb8e33865464c09281dc452b2c4299db266814df5df0f4cbefa9231c2e6d4",
+    "worker-02": "82a382a18d05293f4164574df39714bfddd8313cce653a2e754e6d9c5b79824e"
+  },
+  "global_random_hash": "3f548af357d8f45f246f4cf62786141f816a6c1d0ae579fa41cdb560bb77cb91",
+  "random_list_hash": "f729a2ca43bfc293c46f701ba957c0ee1a3d0f209aee5530b7ddd213bc5cba43",
+  "ai_initial_hash": "97d73599b74a9ef02b7c9046b90d9c6bd9ccda6aaacc7626f0ab18e24ed9bfd4",
+  "evaluation_sha256": "68d34bb53116e8d1debc77b65b08320c52836a5b31414a7a32239b33b5d79bc7",
+  "total_max_starts": 12,
+  "strategy_max_starts": {
+    "random": 6,
+    "ai": 6
+  },
+  "ai_remaining_parameters": "undetermined; baseline and own completed history only",
+  "authorization_created": false,
+  "freeze_hash": "b251b42de10d8a2f7fbcee0e4510efbf807c84e469b64405179897dd71919df1"
+}

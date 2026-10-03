@@ -1,9 +1,9 @@
 {
   "plan_version": "1.0.0",
   "status": "draft",
-  "campaign_id": "G4-example-search-worker-02",
-  "task_id": "RS-20261003-G4",
-  "role": "UNASSIGNED",
+  "campaign_id": "G5-r1-search-worker-02",
+  "task_id": "RS-20261004-G5",
+  "role": "02_deploy",
   "worker_id": "worker-02",
   "max_starts": 6,
   "epochs": 3,
@@ -33,15 +33,6 @@
   },
   "trials": [
     {
-      "arm": "random",
-      "seed": 42,
-      "random_parameters": {
-        "learning_rate": 0.0003,
-        "weight_decay": 0.0,
-        "augmentation": "none"
-      }
-    },
-    {
       "arm": "ai",
       "seed": 42,
       "random_parameters": null
@@ -49,30 +40,39 @@
     {
       "arm": "random",
       "seed": 43,
+      "random_parameters": {
+        "learning_rate": 0.001,
+        "weight_decay": 0.0,
+        "augmentation": "none"
+      }
+    },
+    {
+      "arm": "ai",
+      "seed": 44,
+      "random_parameters": null
+    },
+    {
+      "arm": "random",
+      "seed": 45,
+      "random_parameters": {
+        "learning_rate": 0.001,
+        "weight_decay": 0.001,
+        "augmentation": "none"
+      }
+    },
+    {
+      "arm": "ai",
+      "seed": 46,
+      "random_parameters": null
+    },
+    {
+      "arm": "random",
+      "seed": 47,
       "random_parameters": {
         "learning_rate": 0.0003,
         "weight_decay": 0.0001,
         "augmentation": "none"
       }
-    },
-    {
-      "arm": "ai",
-      "seed": 43,
-      "random_parameters": null
-    },
-    {
-      "arm": "random",
-      "seed": 44,
-      "random_parameters": {
-        "learning_rate": 0.001,
-        "weight_decay": 0.0,
-        "augmentation": "basic"
-      }
-    },
-    {
-      "arm": "ai",
-      "seed": 44,
-      "random_parameters": null
     }
   ]
 }

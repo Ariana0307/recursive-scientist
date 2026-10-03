@@ -1,3 +1,12 @@
+# Current G5 draft inputs
+
+The committed worker plans now contain the real RS-20261004-G5 draft allocation,
+roles 01_train / 02_deploy, seeds 42..47 and one globally frozen Random list.
+They do not authorize execution. See docs/control-g5.md and configs/g5/.
+The text below is preserved historical G4 implementation context; its example
+seeds, UNASSIGNED role and per-worker random generators no longer describe the
+current plan files. G5 never calls SearchAuthority.authorize, even in tests.
+
 # Controlled search preparation: G4 has zero GPU authorization
 
 G4 adds an independent search mechanism; it does not alter or extend G3. G3's

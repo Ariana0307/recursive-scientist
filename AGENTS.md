@@ -11,3 +11,10 @@
 - Review evidence for credentials, private addresses, internal details and personal information before any publication.
 - Keep credentials, data, weights, environments and raw logs outside Git. Never print secrets, copy private SSH keys or enable SSH agent forwarding.
 - Do not change other repositories, robotics programs, system CUDA/drivers/global Python, firewall, tunnels or public listeners. G1 permits only the bounded 01 validation above; control does not download CIFAR, train, or establish SSH dispatch. Credentials remain on control.
+
+## Current G5 preparation scope
+
+- G1/G3/G4 permissions above describe historical rounds. RS-20261004-G5 r1 permits only draft preparation and CPU/mock checks: no training, real model generation, production search authorization, or calls to SearchAuthority.authorize (including synthetic authorization fixtures).
+- Control integrates only on dev/integration-g5-r1; main stays unchanged. Original worker heads remain dev/search-5090-01 and dev/eval-g4-5090-02. Worker ownership of runner/configs and analysis/tests remains unchanged; control owns common contracts and integration.
+- G5 worker plans are drafts. AI sees verified common baseline and only completed AI results; never give it the global random list, Random results, filesystem/shell, authorizers, seeds or budget controls.
+- Keep frozen input hashes and evaluator hash intact. Proposed changes require reviewed new commits, not model instructions. Preserve old ledgers and original handoffs.
