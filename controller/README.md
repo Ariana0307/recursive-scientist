@@ -18,4 +18,4 @@ Run `PYTHONDONTWRITEBYTECODE=1 python3 test_offline.py` from this directory. Thi
 
 For future integration, copy the example config outside the source directory and set `RS_CONFIG` to its location. Existing Python 3.11+ / Omnigent / OpenAI SDK / httpx installations and authenticated Codex must be supplied by the operator; no dependencies are installed here. Use a fresh run root and existing model service. A fresh authentic Codex protocol/review and deployment-specific hashes must be supplied before enabling execution. Recorded approval is not transferable to edited source or a new deployment. No automatic installation, model download, retry or paid resource creation is included.
 
-The project owner has not supplied an open-source license. See `LICENSE_STATUS.md`. This candidate grants no new software license. The deployed public website and earlier recorded 24-request run remain independent of this engineering candidate.
+The project owner has not supplied an open-source license. See `LICENSE_STATUS.md`. This candidate grants no new software license. The recorded website and earlier recorded 24-request run remain independent of this engineering candidate.
