@@ -1,0 +1,53 @@
+{
+  "events": [
+    {
+      "id": "event-1",
+      "phase": "Prompt refinement",
+      "summary": "Both arms used the same six diagnostic tests.",
+      "role": "Researcher A",
+      "artifact_id": "decisions"
+    },
+    {
+      "id": "event-2",
+      "phase": "Both arms fall short",
+      "summary": "Each scored 4/6, exposing answer\u2013explanation inconsistencies.",
+      "role": "Reviewer B",
+      "artifact_id": "results"
+    },
+    {
+      "id": "event-3",
+      "phase": "Use computed facts",
+      "summary": "The resumed researcher changed strategy based on the first review.",
+      "role": "Researcher A",
+      "artifact_id": "decisions"
+    },
+    {
+      "id": "event-4",
+      "phase": "Second batch executed",
+      "summary": "The controller automatically dispatched the selected next experiment.",
+      "role": "Research lead",
+      "artifact_id": "results"
+    },
+    {
+      "id": "event-5",
+      "phase": "Unequal evidence inputs",
+      "summary": "The controller did not implement the requested matched comparison.",
+      "role": "Independent reviewer",
+      "artifact_id": "decisions"
+    },
+    {
+      "id": "event-6",
+      "phase": "Candidate not accepted",
+      "summary": "A high objective score did not override explanation and protocol failures.",
+      "role": "Independent reviewer",
+      "artifact_id": "decisions"
+    },
+    {
+      "id": "event-7",
+      "phase": "Corrected comparison awaits retest",
+      "summary": "Offline contract checks pass; no new Qwen evaluation has run.",
+      "role": "Research lead",
+      "artifact_id": "limitations"
+    }
+  ]
+}

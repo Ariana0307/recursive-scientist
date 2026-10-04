@@ -1,0 +1,225 @@
+{
+  "scope": "Recorded synthetic fixtures; two separate cohorts. Corrected matched-audit follow-up has not run.",
+  "rounds": [
+    {
+      "round": 1,
+      "fixture_set": "fixture-set-1",
+      "numeric_tolerance_pp": 1e-09,
+      "sampling": {
+        "temperature": 0,
+        "max_tokens": 2048,
+        "reasoning_effort": "none",
+        "parallel_tool_calls": false
+      },
+      "prompts": {
+        "baseline": "You are a model under evaluation. Solve only the current task. For a tool task, use the native tools interface exactly once, copy the requested typed arguments, and emit no prose or invented tool result. For a numerical task, compute current minus reference, convert accuracy fractions to percentage points, and verify that the sign agrees with the winner. For an evidence task, distinguish an observed difference from an established mechanism. Missing controlled comparisons or repeated measurements do not establish causality, stability or statistical significance. State what is observed, what remains unknown, and what evidence would resolve it. Do not put definite unsupported claims in a hypothesis field. Return the requested JSON schema for non-tool tasks.",
+        "selected": "You are a model under evaluation. Solve only the current task. For a tool task, use the native tools interface exactly once, copy the requested typed arguments, and emit no prose or invented tool result. For a numerical task, compute current minus reference, convert accuracy fractions to percentage points, and verify that the sign agrees with the winner. For an evidence task, distinguish an observed difference from an established mechanism. Missing controlled comparisons or repeated measurements do not establish causality, stability or statistical significance. State what is observed, what remains unknown, and what evidence would resolve it. Do not put definite unsupported claims in a hypothesis field. Return the requested JSON schema for non-tool tasks. For scientific evidence: unknown means no valid statistical test is supplied; reject means supplied p < pre-specified alpha; fail_to_reject means p >= alpha, and does not prove no effect or equivalence. Never replace unknown with not statistically significant. A numerical observed difference alone cannot establish causality. Use evidence exactly; do not infer an unreported test."
+      },
+      "tests": [
+        {
+          "id": "N1",
+          "kind": "numeric",
+          "input": {
+            "task": "Compare accuracy fractions, current minus reference in percentage points. answer=current/reference/tie, value=delta_pp. Explain evidence limits.",
+            "current": "0.7312",
+            "reference": "0.7305",
+            "evidence": "Single runs, different seeds; no statistical test."
+          },
+          "expected": {
+            "answer": "current",
+            "value": 0.07
+          }
+        },
+        {
+          "id": "E1",
+          "kind": "evidence",
+          "input": {
+            "task": "Classify statistical evidence as unknown/reject/fail_to_reject; value=null. Explain whether the treatment is established as beneficial.",
+            "observations": "Accuracy 0.721 vs 0.724 on two different seeds and machines. No statistical test or uncertainty interval supplied."
+          },
+          "expected": {
+            "answer": "unknown",
+            "value": null
+          }
+        },
+        {
+          "id": "E2",
+          "kind": "evidence",
+          "input": {
+            "task": "Classify the supplied valid pre-specified two-sided test as unknown/reject/fail_to_reject; value=null. Explain what can and cannot be concluded.",
+            "facts": {
+              "null": "zero mean paired accuracy difference",
+              "p": 0.18,
+              "alpha": 0.05,
+              "pre_specified": true,
+              "valid_test": true,
+              "equivalence_test": false
+            }
+          },
+          "expected": {
+            "answer": "fail_to_reject",
+            "value": null
+          }
+        },
+        {
+          "id": "N2",
+          "kind": "numeric",
+          "input": {
+            "task": "Compare accuracy fractions, current minus reference in percentage points. answer=current/reference/tie, value=delta_pp. Explain evidence limits.",
+            "current": "0.8021",
+            "reference": "0.8096",
+            "evidence": "Single runs; no statistical test."
+          },
+          "expected": {
+            "answer": "reference",
+            "value": -0.75
+          }
+        },
+        {
+          "id": "E3",
+          "kind": "evidence",
+          "input": {
+            "task": "Classify the supplied valid pre-specified two-sided test as unknown/reject/fail_to_reject; value=null. Explain whether association establishes causality.",
+            "facts": {
+              "null": "zero mean paired accuracy difference",
+              "p": 0.008,
+              "alpha": 0.01,
+              "pre_specified": true,
+              "valid_test": true,
+              "design": "observational comparison, no randomized intervention"
+            }
+          },
+          "expected": {
+            "answer": "reject",
+            "value": null
+          }
+        },
+        {
+          "id": "T1",
+          "kind": "tool",
+          "input": {
+            "task": "Call compare_decimal exactly once with left=\"0.8021\", right=\"0.8096\" as exact strings. Emit only the native call."
+          },
+          "expected": {
+            "tool": "compare_decimal",
+            "left": "0.8021",
+            "right": "0.8096"
+          }
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "fixture_set": "fixture-set-2",
+      "numeric_tolerance_pp": 1e-09,
+      "sampling": {
+        "temperature": 0,
+        "max_tokens": 2048,
+        "reasoning_effort": "none",
+        "parallel_tool_calls": false
+      },
+      "prompts": {
+        "baseline": "You are a model under evaluation. Solve only the current task. For a tool task, use the native tools interface exactly once, copy the requested typed arguments, and emit no prose or invented tool result. For a numerical task, compute current minus reference, convert accuracy fractions to percentage points, and verify that the sign agrees with the winner. For an evidence task, distinguish an observed difference from an established mechanism. Missing controlled comparisons or repeated measurements do not establish causality, stability or statistical significance. State what is observed, what remains unknown, and what evidence would resolve it. Do not put definite unsupported claims in a hypothesis field. Return the requested JSON schema for non-tool tasks. For scientific evidence: unknown means no valid statistical test is supplied; reject means supplied p < pre-specified alpha; fail_to_reject means p >= alpha, and does not prove no effect or equivalence. Never replace unknown with not statistically significant. A numerical observed difference alone cannot establish causality. Use evidence exactly; do not infer an unreported test.",
+        "selected": "You are a model under evaluation. Solve only the current task. For a tool task, call the requested native tool exactly once, copy the requested typed arguments exactly, and emit only the native call, with no prose or invented result. For non-tool tasks, return only the requested JSON object with answer, value, and explanation, using the required types and no additional fields. A deterministic evidence audit supplied with the task is an actual executed factual result. Use its task-specific fields as authoritative facts, preserve its units and statistical-test status, and do not invent an audit or unreported evidence. For numeric tasks, the audit supplies winner and delta_pp, where delta_pp is current minus reference multiplied by 100. Copy winner into answer and serialize delta_pp as a JSON number in value. The answer identifies the higher observed accuracy: current for a positive delta, reference for a negative delta, and tie for zero. Explain the observed difference in percentage points, consistently with those fields. For evidence tasks, copy the audit's test_status into answer and set value to null. The allowed statuses are unknown, reject, and fail_to_reject. Unknown means no valid statistical test is supplied. For a supplied valid pre-specified test, reject means p is below alpha; fail_to_reject means p is at least alpha. An observational design limits causal inference but does not change the supplied valid test's rejection decision. Failure to reject does not establish zero effect or equivalence. Missing testing does not establish a non-significant result. Rejection alone establishes neither causality nor practical importance. State only evidence limits supported by the task. Before emitting JSON, verify that answer and value agree with the audit and every numerical or statistical statement in the explanation. If a required audit field is missing or inconsistent, do not fabricate its contents; identify the problem in the explanation and use only statuses or values supported by the supplied evidence."
+      },
+      "tests": [
+        {
+          "id": "N1",
+          "kind": "numeric",
+          "input": {
+            "task": "Compare accuracy fractions current minus reference in percentage points. answer=current/reference/tie; value=delta_pp; explain limits.",
+            "current": "0.6843",
+            "reference": "0.6927",
+            "evidence": "Fresh single-run synthetic comparison; no test supplied."
+          },
+          "expected": {
+            "answer": "reference",
+            "value": -0.84
+          }
+        },
+        {
+          "id": "N2",
+          "kind": "numeric",
+          "input": {
+            "task": "Compare accuracy fractions current minus reference in percentage points. answer=current/reference/tie; value=delta_pp; explain limits.",
+            "current": "0.8576",
+            "reference": "0.8539",
+            "evidence": "Fresh single-run synthetic comparison; no test supplied."
+          },
+          "expected": {
+            "answer": "current",
+            "value": 0.37
+          }
+        },
+        {
+          "id": "E1",
+          "kind": "evidence",
+          "input": {
+            "task": "Classify supplied statistical evidence unknown/reject/fail_to_reject; value=null; explain limits without inventing evidence.",
+            "facts": {
+              "equivalence_test": false,
+              "design": "observational, no randomized intervention",
+              "statistical_test": "not performed"
+            }
+          },
+          "expected": {
+            "answer": "unknown",
+            "value": null
+          }
+        },
+        {
+          "id": "E2",
+          "kind": "evidence",
+          "input": {
+            "task": "Classify supplied statistical evidence unknown/reject/fail_to_reject; value=null; explain limits without inventing evidence.",
+            "facts": {
+              "null": "zero mean paired difference",
+              "p": 0.006,
+              "alpha": 0.02,
+              "pre_specified": true,
+              "valid_test": true,
+              "equivalence_test": false,
+              "design": "observational, no randomized intervention"
+            }
+          },
+          "expected": {
+            "answer": "reject",
+            "value": null
+          }
+        },
+        {
+          "id": "E3",
+          "kind": "evidence",
+          "input": {
+            "task": "Classify supplied statistical evidence unknown/reject/fail_to_reject; value=null; explain limits without inventing evidence.",
+            "facts": {
+              "null": "zero mean paired difference",
+              "p": 0.14,
+              "alpha": 0.04,
+              "pre_specified": true,
+              "valid_test": true,
+              "equivalence_test": false,
+              "design": "observational, no randomized intervention"
+            }
+          },
+          "expected": {
+            "answer": "fail_to_reject",
+            "value": null
+          }
+        },
+        {
+          "id": "T1",
+          "kind": "tool",
+          "input": {
+            "task": "Call compare_decimal exactly once with left=\"7.406\", right=\"7.46\" as exact decimal strings. Native call only."
+          },
+          "expected": {
+            "tool": "compare_decimal",
+            "left": "7.406",
+            "right": "7.46"
+          }
+        }
+      ]
+    }
+  ]
+}

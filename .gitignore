@@ -43,3 +43,8 @@ __pycache__/
 *.zip
 *.map
 private-runtime/
+
+# Reviewed public demo fixtures required by the standalone website.
+!/website/backend/data/
+/website/backend/data/*
+!/website/backend/data/public-demo/

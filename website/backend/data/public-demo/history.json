@@ -1,0 +1,18 @@
+{
+  "runs": [
+    {
+      "id": "qwen-recorded-study",
+      "title": "Recorded Qwen study",
+      "summary": "Two result-driven rounds; no accepted improvement. The second comparison had unequal evidence inputs.",
+      "status": "completed",
+      "subject": "Qwen"
+    },
+    {
+      "id": "historical-cnn-project",
+      "title": "Historical CNN project",
+      "summary": "An earlier, separate CNN project. Its training is not Qwen training; its accuracy is not compared with this study.",
+      "status": "historical",
+      "subject": "CNN"
+    }
+  ]
+}

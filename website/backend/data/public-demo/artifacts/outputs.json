@@ -1,0 +1,345 @@
+{
+  "scope": "Recorded outputs and original independent review reasons, explicitly projected to scientific fields.",
+  "cases": [
+    {
+      "round": 1,
+      "test_id": "N1",
+      "arm": "baseline",
+      "objective_pass": true,
+      "review_pass": true,
+      "review_reason": "Correct winner and delta of 0.07 percentage points. The explanation preserves uncertainty about significance and stability without asserting causality.",
+      "output": "{\"answer\":\"current\",\"explanation\":\"The current accuracy (0.7312) is slightly higher than the reference (0.7305). The difference in accuracy fractions is 0.0007, which corresponds to 0.07 percentage points (0.7312 - 0.7305 = 0.0007; 0.0007 × 100 = 0.07%). This difference is observed in single runs with different seeds, but no statistical test was performed to assess significance. Therefore, while the difference is numerically detectable, the evidence does not establish whether this difference is statistically significant or due to random variation. Without repeated measurements or a control group, we cannot rule out that the difference is merely a result of random noise or sampling variability. Thus, the observed difference remains an empirical observation, not a validated or stable mechanism.\",\"value\":0.07}",
+      "tool_calls": [],
+      "supplied_computed_facts": null
+    },
+    {
+      "round": 1,
+      "test_id": "N1",
+      "arm": "selected",
+      "objective_pass": true,
+      "review_pass": true,
+      "review_reason": "Correct winner and delta of 0.07 percentage points. In context, the explanation says significance is unsupported, rather than claiming a non-significant test result.",
+      "output": "{\"answer\":\"current\",\"explanation\":\"The current accuracy (0.7312) is slightly higher than the reference (0.7305). The difference in accuracy fractions is 0.0007, which corresponds to 0.07 percentage points (0.7312 - 0.7305 = 0.0007; 0.0007 × 100 = 0.07%). This difference is observed in single runs with different seeds, but no statistical test was performed to assess whether the difference is significant or due to random variation. Without a controlled comparison, repeated measurements, or a formal statistical test (e.g., t-test, confidence interval), we cannot establish causality or stability. Therefore, while the observed difference is positive, the evidence does not support a statistically significant or reliable conclusion. The result remains an observed difference, not an established effect.\",\"value\":0.07}",
+      "tool_calls": [],
+      "supplied_computed_facts": null
+    },
+    {
+      "round": 1,
+      "test_id": "E1",
+      "arm": "baseline",
+      "objective_pass": true,
+      "review_pass": true,
+      "review_reason": "Correctly classifies missing statistical evidence as unknown and explicitly distinguishes it from either rejecting or failing to reject. Benefit is not established.",
+      "output": "{\"answer\": \"unknown\", \"explanation\": \"The observations show a small difference in accuracy (0.721 vs 0.724) between two conditions, but no statistical test, confidence interval, or uncertainty measure is provided. Without a formal statistical analysis or measure of variability, it is impossible to determine whether the difference is significant or due to random variation. Therefore, the evidence is insufficient to establish a beneficial effect, reject a null hypothesis, or fail to reject it. The status remains unknown due to lack of controlled comparisons or statistical validation.\",\"value\": null}",
+      "tool_calls": [],
+      "supplied_computed_facts": null
+    },
+    {
+      "round": 1,
+      "test_id": "E1",
+      "arm": "selected",
+      "objective_pass": true,
+      "review_pass": true,
+      "review_reason": "Correctly retains unknown status without a supplied test or uncertainty interval and does not establish a beneficial treatment effect.",
+      "output": "{\"answer\": \"unknown\", \"explanation\": \"No statistical test or uncertainty interval is supplied to determine whether the difference in accuracy (0.721 vs 0.724) is statistically significant. Without a p-value, confidence interval, or controlled comparison, it is not possible to assess whether the treatment has a significant effect. Therefore, the evidence remains unknown.\",\"value\": null}",
+      "tool_calls": [],
+      "supplied_computed_facts": null
+    },
+    {
+      "round": 1,
+      "test_id": "E2",
+      "arm": "baseline",
+      "objective_pass": true,
+      "review_pass": true,
+      "review_reason": "Correctly fails to reject because 0.18 exceeds 0.05, while explicitly avoiding claims of zero effect, equivalence, or practical significance.",
+      "output": "{\"answer\": \"fail_to_reject\", \"explanation\": \"The p-value (0.18) is greater than the significance level (alpha = 0.05). Since the test is a valid two-sided pre-specified test and the p-value does not fall below the threshold for statistical significance, we fail to reject the null hypothesis. This means there is insufficient evidence to conclude that the paired accuracy difference is different from zero. However, failing to reject the null does not prove that the difference is zero; it only indicates that the data do not provide strong enough evidence to support a difference. No causal or mechanistic conclusions can be drawn without additional controlled comparisons or repeated measurements. The result is consistent with the null hypothesis being plausible, but does not establish equivalence or practical significance.\", \"value\": null}",
+      "tool_calls": [],
+      "supplied_computed_facts": null
+    },
+    {
+      "round": 1,
+      "test_id": "E2",
+      "arm": "selected",
+      "objective_pass": true,
+      "review_pass": true,
+      "review_reason": "Correctly fails to reject and explains that this does not prove absence of an effect or equivalence.",
+      "output": "{\"answer\": \"fail_to_reject\", \"explanation\": \"The p-value (0.18) is greater than the pre-specified alpha level (0.05), so we fail to reject the null hypothesis. This means there is insufficient evidence to conclude a statistically significant difference in paired accuracy. However, failing to reject the null does not prove the absence of an effect; it only indicates that the data do not provide strong enough evidence to support a difference at the 5% significance level. No causal mechanism or effect size is established, and the result remains consistent with the possibility of a true zero mean difference. The test was valid and pre-specified, but the outcome does not imply equivalence or practical significance.\", \"value\": null}",
+      "tool_calls": [],
+      "supplied_computed_facts": null
+    },
+    {
+      "round": 1,
+      "test_id": "N2",
+      "arm": "baseline",
+      "objective_pass": false,
+      "review_pass": false,
+      "review_reason": "The reference is higher. Required current-minus-reference delta is -0.75 percentage points; the reported value 0.0075 has incorrect sign and units and exceeds the frozen tolerance.",
+      "output": "{\"answer\":\"current\",\"explanation\":\"The current accuracy (0.8021) is less than the reference accuracy (0.8096). The difference in accuracy fractions is 0.8096 - 0.8021 = 0.0075, which is 0.75 percentage points. Since the evidence consists of single runs without statistical testing or repeated measurements, there is no established confidence in the stability or significance of this difference. The observed difference is not verified as statistically significant or causally attributable to any factor. Thus, while the current value is lower, the evidence limits the conclusion to a single observation without control or replication. No mechanism is established to explain the difference, and the result remains an observed difference, not a proven effect.\",\"value\":0.0075}",
+      "tool_calls": [],
+      "supplied_computed_facts": null
+    },
+    {
+      "round": 1,
+      "test_id": "N2",
+      "arm": "selected",
+      "objective_pass": false,
+      "review_pass": false,
+      "review_reason": "The explanation computes -0.75 percentage points correctly but incorrectly names current as the winner and returns -0.0075 instead of -0.75, exceeding the frozen tolerance.",
+      "output": "{\"answer\":\"current\",\"explanation\":\"The accuracy fraction for current (0.8021) is less than the reference (0.8096). The difference in percentage points is calculated as (0.8021 - 0.8096) = -0.0075, or -0.75 percentage points. Since the current value is lower, the result is 'current'. However, the evidence consists of only single runs with no statistical test, so no inference about significance or stability can be made. There is no controlled comparison or repeated measurements to establish causality or statistical significance. Thus, while the observed difference is negative, the lack of statistical testing means we cannot conclude whether this difference is meaningful or due to random variation. The evidence limits the conclusion to an observed difference without any confidence in its reliability or generalizability.\",\"value\":-0.0075}",
+      "tool_calls": [],
+      "supplied_computed_facts": null
+    },
+    {
+      "round": 1,
+      "test_id": "E3",
+      "arm": "baseline",
+      "objective_pass": false,
+      "review_pass": false,
+      "review_reason": "The supplied valid test requires rejection because 0.008 < 0.01. The answer contradicts the explanation; observational causal limitations do not change the statistical decision.",
+      "output": "{\"answer\": \"fail_to_reject\", \"explanation\": \"The p-value (0.008) is less than the significance level (alpha = 0.01), so we would typically reject the null hypothesis in a two-sided test. However, the task specifies that the test is valid and pre-specified, and the design is observational with no randomized intervention. Despite the statistical significance, association does not establish causality in observational studies due to potential confounding variables and lack of randomization. Therefore, while the result is statistically significant, causality cannot be inferred from the observed association. The classification here is based on the test outcome, but the explanation must emphasize that association does not imply causality.\", \"value\": null}",
+      "tool_calls": [],
+      "supplied_computed_facts": null
+    },
+    {
+      "round": 1,
+      "test_id": "E3",
+      "arm": "selected",
+      "objective_pass": false,
+      "review_pass": false,
+      "review_reason": "The explanation correctly rejects the supplied null and limits causal inference, but the answer incorrectly states fail_to_reject.",
+      "output": "{\"answer\": \"fail_to_reject\", \"explanation\": \"The p-value (0.008) is less than the pre-specified alpha level (0.01), so we reject the null hypothesis of zero mean paired accuracy difference. However, the design is observational, not randomized, and thus any observed association does not establish causality. Association does not imply causation without controlled intervention or a mechanism that rules out confounding. Therefore, while the statistical test shows a significant difference, causality cannot be established due to the lack of randomization and potential unmeasured confounders.\", \"value\": null}",
+      "tool_calls": [],
+      "supplied_computed_facts": null
+    },
+    {
+      "round": 1,
+      "test_id": "T1",
+      "arm": "baseline",
+      "objective_pass": true,
+      "review_pass": true,
+      "review_reason": "No prose was requested or emitted, and no tool result was invented. Execution is assessed by the program.",
+      "output": "",
+      "tool_calls": [
+        {
+          "tool": "compare_decimal",
+          "arguments": {
+            "left": "0.8021",
+            "right": "0.8096"
+          },
+          "returned": {
+            "relation": "less",
+            "difference": "-0.0075"
+          },
+          "elapsed_seconds": 1.2552998668979853e-05,
+          "error": null
+        }
+      ],
+      "supplied_computed_facts": null
+    },
+    {
+      "round": 1,
+      "test_id": "T1",
+      "arm": "selected",
+      "objective_pass": true,
+      "review_pass": true,
+      "review_reason": "No prose was requested or emitted, and no tool result was invented. Execution is assessed by the program.",
+      "output": "",
+      "tool_calls": [
+        {
+          "tool": "compare_decimal",
+          "arguments": {
+            "left": "0.8021",
+            "right": "0.8096"
+          },
+          "returned": {
+            "relation": "less",
+            "difference": "-0.0075"
+          },
+          "elapsed_seconds": 1.3195000065024942e-05,
+          "error": null
+        }
+      ],
+      "supplied_computed_facts": null
+    },
+    {
+      "round": 2,
+      "test_id": "N1",
+      "arm": "baseline",
+      "objective_pass": false,
+      "review_pass": false,
+      "review_reason": "The delta is correctly -0.84 percentage points, but the answer incorrectly identifies current as the winner, contradicting the explanation. Reference has higher observed accuracy.",
+      "output": "{\"answer\": \"current\", \"explanation\": \"The accuracy fraction of current (0.6843) is less than the reference (0.6927). The difference in percentage points is calculated as 0.6843 - 0.6927 = -0.0084, or -0.84 percentage points. Since the current value is lower, the current accuracy is worse than the reference. However, the evidence provided is a single-run synthetic comparison with no statistical test or control for variability, so no confidence interval or significance level is established. Thus, while the observed difference is negative, the lack of repeated measurements or a test of significance means we cannot assert statistical significance or stability. The observed difference is -0.84 percentage points, and the limit of inference is that this is a single run with no validation of consistency or causality.\", \"value\": -0.84}",
+      "tool_calls": [],
+      "supplied_computed_facts": null
+    },
+    {
+      "round": 2,
+      "test_id": "N1",
+      "arm": "selected",
+      "objective_pass": true,
+      "review_pass": false,
+      "review_reason": "Winner and delta are correct, and the supplied audit supports the arithmetic. However, the explanation omits the requested evidence limits: this single-run comparison without a statistical test establishes neither significance, stability, nor causality.",
+      "output": "{\"answer\": \"reference\", \"explanation\": \"The accuracy fraction of the current value (0.6843) is lower than the reference value (0.6927). The difference in percentage points is calculated as (0.6843 - 0.6927) × 100 = -0.8400 percentage points. Since the delta_pp is negative, the reference value has higher accuracy. The deterministic audit confirms that the reference is the winner, with a delta_pp of -0.840\", \"value\": -0.84}",
+      "tool_calls": [],
+      "supplied_computed_facts": {
+        "answer": "reference",
+        "value": "-0.8400",
+        "units": "percentage_points"
+      }
+    },
+    {
+      "round": 2,
+      "test_id": "N2",
+      "arm": "baseline",
+      "objective_pass": false,
+      "review_pass": false,
+      "review_reason": "The winner and explanatory conversion are correct, but value is an accuracy fraction rather than percentage points. Required value is 0.37; 0.0037 exceeds the frozen tolerance.",
+      "output": "{\"answer\": \"current\", \"explanation\": \"The accuracy fraction of current (0.8576) is higher than the reference (0.8539). The difference in percentage points is 0.8576 - 0.8539 = 0.0037, or 0.37 percentage points. This is a positive difference, indicating current performs better. However, the evidence provided is a single-run synthetic comparison with no statistical test or control for variability. Thus, while the observed difference is 0.37 percentage points, no confidence interval or significance test is available to assess whether this difference is statistically significant or stable. Without repeated measurements or a control group, we cannot establish causality or stability. The observed difference remains an unverified estimate.\", \"value\": 0.0037}",
+      "tool_calls": [],
+      "supplied_computed_facts": null
+    },
+    {
+      "round": 2,
+      "test_id": "N2",
+      "arm": "selected",
+      "objective_pass": true,
+      "review_pass": true,
+      "review_reason": "Correct winner and delta of 0.37 percentage points. In context, 'real' describes the supplied numerical observation, while the explanation explicitly limits it to observed values without inferential testing.",
+      "output": "{\"answer\": \"current\", \"explanation\": \"The accuracy fraction of the current condition (0.8576) is higher than the reference condition (0.8539). The difference in percentage points is 0.3700, calculated as (0.8576 - 0.8539) * 100. This indicates that the current accuracy is 0.3700 percentage points higher than the reference. Since no statistical test is supplied in the evidence, the comparison is deterministic and based solely on the observed values. The result is therefore a direct observational difference, with no inferential testing or confidence intervals. The observed difference is real and consistent with the deterministic audit.\", \"value\": 0.37}",
+      "tool_calls": [],
+      "supplied_computed_facts": {
+        "answer": "current",
+        "value": "0.3700",
+        "units": "percentage_points"
+      }
+    },
+    {
+      "round": 2,
+      "test_id": "E1",
+      "arm": "baseline",
+      "objective_pass": true,
+      "review_pass": true,
+      "review_reason": "Correctly classifies the unperformed test as unknown, without claiming non-significance or equivalence. No effect-size data are supplied in this fixture.",
+      "output": "{\"answer\": \"unknown\", \"explanation\": \"No statistical test was performed, and the study design is observational with no randomized intervention. Without a formal statistical test, there is no basis to determine whether any observed differences are statistically significant or to assess equivalence. Therefore, the evidence is unknown. The absence of a statistical test means no inference about effect size, significance, or equivalence can be made.\",\"value\": null}",
+      "tool_calls": [],
+      "supplied_computed_facts": null
+    },
+    {
+      "round": 2,
+      "test_id": "E1",
+      "arm": "selected",
+      "objective_pass": true,
+      "review_pass": true,
+      "review_reason": "Correctly retains unknown status because no test was performed and distinguishes missing evidence from a rejection decision. The supplied audit is not invented.",
+      "output": "{\"answer\": \"unknown\", \"explanation\": \"The design is observational and lacks a randomized intervention, which limits causal inference. No statistical test was performed, so there is no valid statistical test to evaluate the null hypothesis. As a result, the status of the evidence is 'unknown' because no statistical test was conducted to determine significance. The absence of a performed test means no p-value or decision (reject/fail_to_reject) can be made. This classification is consistent with the deterministic audit indicating 'unknown' and the absence of any statistical test in the facts provided.\", \"value\": null}",
+      "tool_calls": [],
+      "supplied_computed_facts": {
+        "answer": "unknown",
+        "causality": "not_established",
+        "equivalence": "not_established"
+      }
+    },
+    {
+      "round": 2,
+      "test_id": "E2",
+      "arm": "baseline",
+      "objective_pass": true,
+      "review_pass": true,
+      "review_reason": "Correctly rejects the supplied null because 0.006 < 0.02 and explicitly separates statistical significance from causality, magnitude, and practical importance.",
+      "output": "{\"answer\": \"reject\", \"explanation\": \"The p-value (0.006) is less than the pre-specified alpha level (0.02), so we reject the null hypothesis of zero mean paired difference. This conclusion is valid given that the test is statistically significant and the design is observational with a valid test. However, because the study is observational, no causal inference can be established, and the result reflects an observed association, not a causal mechanism. The decision to reject the null is based solely on the p-value and pre-specified alpha, and does not imply the magnitude or practical significance of the effect.\", \"value\": null}",
+      "tool_calls": [],
+      "supplied_computed_facts": null
+    },
+    {
+      "round": 2,
+      "test_id": "E2",
+      "arm": "selected",
+      "objective_pass": true,
+      "review_pass": true,
+      "review_reason": "Correctly rejects the supplied null. Read as a whole, 'significant effect' refers to the statistical difference, with explicit limits on causality and practical importance.",
+      "output": "{\"answer\": \"reject\", \"explanation\": \"The statistical test is valid and pre-specified, with a p-value of 0.006, which is less than the significance level alpha of 0.02. Therefore, the null hypothesis of zero mean paired difference is rejected. This decision is based solely on the provided p-value and alpha, and does not establish causality, as the design is observational and lacks randomized intervention. The rejection of the null hypothesis indicates a statistically significant difference, but it does not imply a causal relationship or practical importance. The evidence supports a significant effect in the observed data, but the observational design limits causal inference.\", \"value\": null}",
+      "tool_calls": [],
+      "supplied_computed_facts": {
+        "answer": "reject",
+        "causality": "not_established",
+        "equivalence": "not_established"
+      }
+    },
+    {
+      "round": 2,
+      "test_id": "E3",
+      "arm": "baseline",
+      "objective_pass": true,
+      "review_pass": true,
+      "review_reason": "Correctly fails to reject because 0.14 > 0.04 and explicitly states that this proves neither absence of an effect nor equivalence.",
+      "output": "{\"answer\": \"fail_to_reject\", \"explanation\": \"The p-value (0.14) is greater than the pre-specified alpha level (0.04), so we fail to reject the null hypothesis of zero mean paired difference. This decision is valid given the observed p-value and the pre-specified significance level. However, because the study design is observational and lacks randomization, any inferred association is not causal. The result does not establish a meaningful effect, nor does it confirm equivalence. The evidence does not support a statistically significant difference, but this does not prove the absence of an effect—only that the data do not provide sufficient evidence to reject the null hypothesis at the 0.04 significance level. The validity of the test is confirmed, but the lack of randomization limits the strength of inferences about causality.\", \"value\": null}",
+      "tool_calls": [],
+      "supplied_computed_facts": null
+    },
+    {
+      "round": 2,
+      "test_id": "E3",
+      "arm": "selected",
+      "objective_pass": true,
+      "review_pass": true,
+      "review_reason": "Correctly fails to reject and avoids asserting zero effect, equivalence, practical importance, or causality.",
+      "output": "{\"answer\": \"fail_to_reject\", \"explanation\": \"The statistical test is valid and pre-specified, with a p-value of 0.14, which is greater than the significance level alpha of 0.04. Therefore, we fail to reject the null hypothesis of zero mean paired difference. This result does not establish a significant effect, nor does it establish equivalence. The observational design limits causal inference, as no randomized intervention was conducted. However, the test result itself—fail to reject the null—is valid and supported by the evidence. The decision is based solely on the p-value and the pre-specified alpha level, without any claim of practical importance or causality.\", \"value\": null}",
+      "tool_calls": [],
+      "supplied_computed_facts": {
+        "answer": "fail_to_reject",
+        "causality": "not_established",
+        "equivalence": "not_established"
+      }
+    },
+    {
+      "round": 2,
+      "test_id": "T1",
+      "arm": "baseline",
+      "objective_pass": true,
+      "review_pass": true,
+      "review_reason": "No prose was requested or emitted, and no content was invented. The program handles execution assessment.",
+      "output": "",
+      "tool_calls": [
+        {
+          "tool": "compare_decimal",
+          "arguments": {
+            "left": "7.406",
+            "right": "7.46"
+          },
+          "returned": {
+            "relation": "less",
+            "difference": "-0.054"
+          },
+          "elapsed_seconds": 1.9726001482922584e-05,
+          "error": null
+        }
+      ],
+      "supplied_computed_facts": null
+    },
+    {
+      "round": 2,
+      "test_id": "T1",
+      "arm": "selected",
+      "objective_pass": true,
+      "review_pass": true,
+      "review_reason": "No prose was requested or emitted, and no content was invented. The program handles execution assessment.",
+      "output": "",
+      "tool_calls": [
+        {
+          "tool": "compare_decimal",
+          "arguments": {
+            "left": "7.406",
+            "right": "7.46"
+          },
+          "returned": {
+            "relation": "less",
+            "difference": "-0.054"
+          },
+          "elapsed_seconds": 1.3744996977038682e-05,
+          "error": null
+        }
+      ],
+      "supplied_computed_facts": null
+    }
+  ]
+}

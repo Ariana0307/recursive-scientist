@@ -1,0 +1,3 @@
+# Limits and the next experiment
+
+The bounded research loop completed, but model improvement was not established and there is no accepted best configuration. These are small synthetic checks, with different fixtures in each round; they are not evidence of broad model performance. A matched-input, corrected-schema protocol has passed offline checks but has not been rerun against Qwen. Next: freeze a fresh small comparison after payload-parity checks. Stop, recovery, and no-new-dispatch behavior were exercised using isolated CPU test jobs, not by canceling real Qwen inference. The public CodexExecutor route is verified; optional server-session runner integration was not part of the demonstrated path.

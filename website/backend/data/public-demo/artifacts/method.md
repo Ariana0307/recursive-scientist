@@ -1,0 +1,3 @@
+# Reproducible method
+
+The evaluated model was Qwen3-4B-Instruct-2507, GGUF Q4_K_M, served by Ollama 0.35.1. Sampling was temperature 0, maximum 2048 tokens, reasoning effort none, and parallel tool calls disabled; top-p and seed used shared service defaults. Decimal arithmetic checked numeric answers with a 1e-9 percentage-point tolerance. Four native compare_decimal calls actually executed; independent Codex review inspected original answers. Omnigent via public CodexExecutor coordinated persistent researcher and reviewer turns. Research roles had only allowlisted read_evidence access: web search and native tools were disabled.

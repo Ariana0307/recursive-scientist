@@ -1,0 +1,75 @@
+{
+  "scope": "Anonymized summaries projected from preserved decisions, dispatch events, results, reviews and best records. Order is historical; playback is illustrative, not original elapsed time. No original quote or terminal log is simulated.",
+  "nodes": [
+    {
+      "id": "candidates",
+      "title": "Two candidates",
+      "summary": "A \u2014 clearer instructions: an explicit evidence-state contract. B \u2014 computed facts: deterministic facts supplied to both arms, to evaluate assisted reporting.",
+      "status": "recorded"
+    },
+    {
+      "id": "selection",
+      "title": "Choose A: clearer instructions",
+      "summary": "The researcher selected the prompt-only change to target unsupported significance claims. Computed facts were reserved for persistent failures because they change the assistance given to the model.",
+      "status": "recorded"
+    },
+    {
+      "id": "dispatch-one",
+      "title": "Dispatch the first batch",
+      "summary": "A real frozen six-test comparison was dispatched: six baseline and six selected requests, 12 model requests in total.",
+      "status": "executed"
+    },
+    {
+      "id": "result-one",
+      "title": "First result: 4/6 versus 4/6",
+      "summary": "Baseline and selected each passed 4/6 objective checks and 4/6 independent explanation reviews.",
+      "status": "reviewed"
+    },
+    {
+      "id": "review",
+      "title": "Review found contradictions",
+      "summary": "Structured winner, numeric units and rejection labels disagreed with the explanations. A clearer prompt alone had not solved the consistency failures.",
+      "status": "reviewed"
+    },
+    {
+      "id": "best-one",
+      "title": "An observed best is not an accepted best",
+      "summary": "The persisted record retained the baseline as the observed 4/6 result in the first cohort. Neither configuration met acceptance criteria.",
+      "status": "persisted",
+      "observed_best": "Baseline: 4/6 objective, 4/6 review (first cohort)",
+      "accepted_best": null
+    },
+    {
+      "id": "pivot",
+      "title": "Abandon prompt-only sufficiency",
+      "summary": "The resumed researcher rejected the sufficiency hypothesis and chose computed facts with an explicit output-mapping contract, using fresh fixtures.",
+      "status": "decision_changed"
+    },
+    {
+      "id": "dispatch-two",
+      "title": "Automatically dispatch the second batch",
+      "summary": "The result-driven decision was followed by a real second dispatch. Another 12 requests ran, reaching the bounded total of 24.",
+      "status": "executed"
+    },
+    {
+      "id": "result-two",
+      "title": "Second result: objective 6/6, review 5/6",
+      "summary": "Selected passed 6/6 objective checks and 5/6 explanation reviews. Baseline remained 4/6 on both measures. This batch used a different fixture set.",
+      "status": "reviewed"
+    },
+    {
+      "id": "rejection",
+      "title": "Reject the apparent win",
+      "summary": "The controller supplied computed facts only to the selected arm, contrary to the requested equal-input protocol; the audit schema also differed. The higher observed score cannot justify promotion.",
+      "status": "not_accepted",
+      "observed_best": "Selected: 6/6 objective, 5/6 review (second cohort; invalid intended comparison)",
+      "accepted_best": null
+    },
+    {
+      "id": "next",
+      "title": "Corrected protocol: model retest not run",
+      "summary": "Offline protocol checks passed. A fresh matched-input Qwen evaluation remains the proposed next experiment; no corrected model retest has run.",
+      "status": "proposed"
+    }
+  ]
+}

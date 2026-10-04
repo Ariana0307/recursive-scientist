@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "artifacts": [
+    {
+      "artifact_id": "design",
+      "title": "Question and comparison design",
+      "category": "design",
+      "summary": "Can bounded evidence checks improve Qwen numerical and scientific judgment without updating weights? Each round compared a baseline with one selected configuration on six frozen synthetic fixtures. Both arms used the same sampling settings. Acceptance required correct objective fields and no important explanatory error; a higher score alone was insufficient.",
+      "file": "design.md",
+      "media_type": "text/markdown; charset=utf-8"
+    },
+    {
+      "artifact_id": "results",
+      "title": "Two rounds of results",
+      "category": "results",
+      "summary": "Round 1: baseline and selected each passed 4 of 6 objective checks and 4 of 6 independent explanation reviews. Round 2 used different fixtures: baseline passed 4 of 6 on both measures; selected passed 6 of 6 objective checks and 5 of 6 explanation reviews. Comparison invalid: unequal evidence inputs. Do not connect these rounds as a trend or infer generalization, statistical significance, or isolated prompt improvement.",
+      "file": "results.md",
+      "media_type": "text/markdown; charset=utf-8"
+    },
+    {
+      "artifact_id": "decisions",
+      "title": "Why the lab changed direction—and rejected the candidate",
+      "category": "decisions",
+      "summary": "The first results exposed inconsistent numeric fields and evidence labels, so the resumed researcher changed from prompt refinement to computed facts. That decision triggered a real second experimental batch. Review then found an explanation omission and a controller implementation deviation: computed facts were not delivered equally to both arms, despite the researcher requesting parity. No candidate was accepted; the defect cannot be blamed entirely on Qwen.",
+      "file": "decisions.md",
+      "media_type": "text/markdown; charset=utf-8"
+    },
+    {
+      "artifact_id": "method",
+      "title": "Reproducible method",
+      "category": "method",
+      "summary": "Qwen3-4B-Instruct-2507 (Q4_K_M) was evaluated at temperature 0 with frozen settings and deterministic numeric checks. Four native tool calls executed, and independent Codex review inspected original answers. Omnigent’s public CodexExecutor coordinated persistent researcher and reviewer turns with allowlisted evidence reading only.",
+      "file": "method.md",
+      "media_type": "text/markdown; charset=utf-8"
+    },
+    {
+      "artifact_id": "limitations",
+      "title": "Limits and the next experiment",
+      "category": "limitations",
+      "summary": "The research loop completed, but no model improvement or accepted best configuration was established. The corrected matched-input protocol passed offline checks; its model retest remains unexecuted. Stop and recovery evidence comes from isolated CPU tasks, not cancellation of real Qwen inference.",
+      "file": "limitations.md",
+      "media_type": "text/markdown; charset=utf-8"
+    },
+    {
+      "artifact_id": "fixtures",
+      "title": "Frozen fixtures and prompts",
+      "category": "method",
+      "summary": "Download only reviewed scientific fields; no live experiment is started.",
+      "file": "fixtures.json",
+      "media_type": "application/json"
+    },
+    {
+      "artifact_id": "outputs",
+      "title": "Recorded outputs and independent reviews",
+      "category": "method",
+      "summary": "Download only reviewed scientific fields; no live experiment is started.",
+      "file": "outputs.json",
+      "media_type": "application/json"
+    },
+    {
+      "artifact_id": "scorer",
+      "title": "Offline objective scorer",
+      "category": "method",
+      "summary": "Download only reviewed scientific fields; no live experiment is started.",
+      "file": "scorer.py",
+      "media_type": "text/x-python"
+    }
+  ]
+}
