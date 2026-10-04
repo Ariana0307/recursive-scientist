@@ -1,0 +1,54 @@
+{
+  "task_id": "RS-20261004-G14",
+  "revision": "r1",
+  "title": "Equal-audit corrected-protocol replication",
+  "status": "completed",
+  "requests": 12,
+  "request_budget": 12,
+  "historical_requests": 24,
+  "historical_run_unchanged": true,
+  "model": "qwen3:4b-instruct",
+  "scope": "Output mapping and explanation consistency with identical deterministic audit assistance; six new paired synthetic fixtures",
+  "scores": [
+    {
+      "arm": "baseline",
+      "prompt": "C1",
+      "objective": 5,
+      "explanation": 2,
+      "total": 6,
+      "accepted": false
+    },
+    {
+      "arm": "selected",
+      "prompt": "mapping-contract",
+      "objective": 6,
+      "explanation": 2,
+      "total": 6,
+      "accepted": false
+    }
+  ],
+  "best_observed": "mapping-contract, descriptive objective best in this cohort only",
+  "best_accepted": null,
+  "promoted": false,
+  "conclusion": "Neither arm met all objective and original-explanation requirements. The mapping contract passed all six structured-answer checks but failed four explanation reviews. No accepted champion and no claim of general superiority.",
+  "protocol_fidelity": {
+    "same_audit_per_pair": true,
+    "same_user_payload_schema_sampling": true,
+    "only_system_prompt_differs": true,
+    "all_actual_requests_match_reviewed_previews": true,
+    "pre_execution_review_approved": true,
+    "independent_objective_scoring": true,
+    "raw_original_explanation_review": true
+  },
+  "execution": {
+    "requests": 12,
+    "http_200": 12,
+    "completed_stop_responses": 12,
+    "retries": 0,
+    "remote_job_exited": true,
+    "forced_cancellation_tested": false
+  },
+  "correction_note": "An initial review summary miscounted selected explanation passes as three; its per-case boolean decisions total two. The scientist corrected the aggregate without changing any per-case judgment.",
+  "next_step": "Stop this exhausted cohort. A future proposal would improve explanation coverage while preserving equal assistance and strict acceptance; it is not executed.",
+  "historical_comparability": "This six-case cohort is separate from the previous 24-request run and must not be joined into a continuous improvement curve."
+}

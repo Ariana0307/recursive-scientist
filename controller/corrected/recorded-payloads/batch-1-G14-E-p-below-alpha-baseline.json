@@ -1,0 +1,51 @@
+{
+  "messages": [
+    {
+      "content": "You are a model under evaluation. Solve only the current task. For a tool task, use the native tools interface exactly once, copy the requested typed arguments, and emit no prose or invented tool result. For a numerical task, compute current minus reference, convert accuracy fractions to percentage points, and verify that the sign agrees with the winner. For an evidence task, distinguish an observed difference from an established mechanism. Missing controlled comparisons or repeated measurements do not establish causality, stability or statistical significance. State what is observed, what remains unknown, and what evidence would resolve it. Do not put definite unsupported claims in a hypothesis field. Return the requested JSON schema for non-tool tasks. For scientific evidence: unknown means no valid statistical test is supplied; reject means supplied p < pre-specified alpha; fail_to_reject means p >= alpha, and does not prove no effect or equivalence. Never replace unknown with not statistically significant. A numerical observed difference alone cannot establish causality. Use evidence exactly; do not infer an unreported test.",
+      "role": "system"
+    },
+    {
+      "role": "user",
+      "content": "{\"task\": \"Return only JSON with answer, value, and explanation. These are supplied synthetic observations from an observational design without randomized intervention or other causal identification. Classify the supplied statistical evidence: unknown if no valid statistical test is supplied; reject if a supplied valid prespecified test has p<alpha; fail_to_reject if it has p>=alpha, including p=alpha. Set value to null. Explain the decision using only supplied facts. Missing testing does not establish a non-significant result; failure to reject does not establish zero effect or equivalence; rejection alone does not establish practical importance or causality. Observational design limits causal inference but does not invalidate a supplied valid test's rejection decision. State the applicable limits and evidence needed to resolve them without inventing evidence.\", \"facts\": {\"synthetic\": true, \"design\": \"Observational comparison of matched existing records; no randomized intervention or other causal identification.\", \"statistical_test\": \"Supplied valid prespecified two-sided test of mean paired accuracy difference.\", \"null\": \"zero mean paired accuracy difference\", \"valid_test\": true, \"pre_specified\": true, \"p\": 0.003, \"alpha\": 0.015, \"comparison_precision\": \"Supplied p and alpha are exact for this synthetic fixture, not rounded displays.\", \"equivalence_test\": false, \"effect_size\": \"not supplied\", \"uncertainty_interval\": \"not supplied\", \"practical_importance_threshold\": \"not supplied\"}, \"deterministic_audit\": {\"test_status\": \"reject\", \"causality\": \"not_established\", \"equivalence\": \"not_established\"}}"
+    }
+  ],
+  "model": "qwen3:4b-instruct",
+  "max_tokens": 2048,
+  "parallel_tool_calls": false,
+  "reasoning_effort": "none",
+  "stream": true,
+  "temperature": 0,
+  "stream_options": {
+    "include_usage": true
+  },
+  "response_format": {
+    "type": "json_schema",
+    "json_schema": {
+      "name": "answer",
+      "strict": true,
+      "schema": {
+        "type": "object",
+        "properties": {
+          "answer": {
+            "type": "string"
+          },
+          "value": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "explanation": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "answer",
+          "value",
+          "explanation"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}

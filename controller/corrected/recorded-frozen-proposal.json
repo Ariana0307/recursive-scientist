@@ -1,0 +1,317 @@
+{
+  "protocol_id": "G14",
+  "frozen": true,
+  "status": "frozen_proposal_pending_controller_02_check",
+  "scope": "Compare two historical system prompts under identical deterministic audit assistance on six new synthetic fixtures. This proposal executes no experiments.",
+  "baseline": {
+    "name": "C1",
+    "source": "G11/control/batches/batch-2/config.json:baseline.system",
+    "verbatim_verified": true,
+    "system": "You are a model under evaluation. Solve only the current task. For a tool task, use the native tools interface exactly once, copy the requested typed arguments, and emit no prose or invented tool result. For a numerical task, compute current minus reference, convert accuracy fractions to percentage points, and verify that the sign agrees with the winner. For an evidence task, distinguish an observed difference from an established mechanism. Missing controlled comparisons or repeated measurements do not establish causality, stability or statistical significance. State what is observed, what remains unknown, and what evidence would resolve it. Do not put definite unsupported claims in a hypothesis field. Return the requested JSON schema for non-tool tasks. For scientific evidence: unknown means no valid statistical test is supplied; reject means supplied p < pre-specified alpha; fail_to_reject means p >= alpha, and does not prove no effect or equivalence. Never replace unknown with not statistically significant. A numerical observed difference alone cannot establish causality. Use evidence exactly; do not infer an unreported test."
+  },
+  "selected": {
+    "name": "mapping-contract",
+    "historical_name": "result-driven pivot_fact_ledger",
+    "source": "G11/control/batches/batch-2/config.json:selected.system",
+    "verbatim_verified": true,
+    "system": "You are a model under evaluation. Solve only the current task. For a tool task, call the requested native tool exactly once, copy the requested typed arguments exactly, and emit only the native call, with no prose or invented result. For non-tool tasks, return only the requested JSON object with answer, value, and explanation, using the required types and no additional fields. A deterministic evidence audit supplied with the task is an actual executed factual result. Use its task-specific fields as authoritative facts, preserve its units and statistical-test status, and do not invent an audit or unreported evidence. For numeric tasks, the audit supplies winner and delta_pp, where delta_pp is current minus reference multiplied by 100. Copy winner into answer and serialize delta_pp as a JSON number in value. The answer identifies the higher observed accuracy: current for a positive delta, reference for a negative delta, and tie for zero. Explain the observed difference in percentage points, consistently with those fields. For evidence tasks, copy the audit's test_status into answer and set value to null. The allowed statuses are unknown, reject, and fail_to_reject. Unknown means no valid statistical test is supplied. For a supplied valid pre-specified test, reject means p is below alpha; fail_to_reject means p is at least alpha. An observational design limits causal inference but does not change the supplied valid test's rejection decision. Failure to reject does not establish zero effect or equivalence. Missing testing does not establish a non-significant result. Rejection alone establishes neither causality nor practical importance. State only evidence limits supported by the task. Before emitting JSON, verify that answer and value agree with the audit and every numerical or statistical statement in the explanation. If a required audit field is missing or inconsistent, do not fabricate its contents; identify the problem in the explanation and use only statuses or values supported by the supplied evidence."
+  },
+  "request_budget": {
+    "maximum_qwen_requests": 12,
+    "planned_requests": 12,
+    "requests_per_arm": 6,
+    "failures_count_toward_budget": true,
+    "retries": 0,
+    "followups": 0,
+    "extra_requests": 0,
+    "requests_executed_by_researcher": 0,
+    "gpu_authorized": true,
+    "failure_policy": "Record failed, missing or truncated responses as failures. Do not replace them or request repairs."
+  },
+  "sampling": {
+    "model": "qwen3:4b-instruct",
+    "temperature": 0,
+    "max_tokens": 2048,
+    "reasoning_effort": "none",
+    "parallel_tool_calls": false
+  },
+  "schema": {
+    "type": "object",
+    "properties": {
+      "answer": {
+        "type": "string"
+      },
+      "value": {
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "explanation": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "answer",
+      "value",
+      "explanation"
+    ],
+    "additionalProperties": false
+  },
+  "shared_tasks": {
+    "numeric": "Return only JSON with answer, value, and explanation. The scores are accuracy fractions from a single synthetic run; no statistical test, repeated-run evidence, uncertainty interval, or causal design is supplied. answer identifies the HIGHER observed accuracy: current if current>reference, reference if current<reference, and tie if equal. value is (current-reference)*100 as a JSON number in percentage points, not relative percent change. Explain the observed winner and signed difference consistently. Explicitly explain that this single run cannot establish statistical significance, stability across runs, causality, or general superiority; a tie does not prove equivalence. Describe evidence needed to assess those limits without inventing results.",
+    "evidence": "Return only JSON with answer, value, and explanation. These are supplied synthetic observations from an observational design without randomized intervention or other causal identification. Classify the supplied statistical evidence: unknown if no valid statistical test is supplied; reject if a supplied valid prespecified test has p<alpha; fail_to_reject if it has p>=alpha, including p=alpha. Set value to null. Explain the decision using only supplied facts. Missing testing does not establish a non-significant result; failure to reject does not establish zero effect or equivalence; rejection alone does not establish practical importance or causality. Observational design limits causal inference but does not invalidate a supplied valid test's rejection decision. State the applicable limits and evidence needed to resolve them without inventing evidence."
+  },
+  "tests": [
+    {
+      "id": "G14-N-positive",
+      "kind": "numeric",
+      "input": {
+        "task": "Return only JSON with answer, value, and explanation. The scores are accuracy fractions from a single synthetic run; no statistical test, repeated-run evidence, uncertainty interval, or causal design is supplied. answer identifies the HIGHER observed accuracy: current if current>reference, reference if current<reference, and tie if equal. value is (current-reference)*100 as a JSON number in percentage points, not relative percent change. Explain the observed winner and signed difference consistently. Explicitly explain that this single run cannot establish statistical significance, stability across runs, causality, or general superiority; a tie does not prove equivalence. Describe evidence needed to assess those limits without inventing results.",
+        "current": "0.9138",
+        "reference": "0.9071",
+        "evidence": "Single synthetic run comparing two observed accuracy fractions; no statistical test, repeated runs, uncertainty interval, or causal design."
+      },
+      "expected": {
+        "answer": "current",
+        "value": 0.67
+      }
+    },
+    {
+      "id": "G14-N-negative",
+      "kind": "numeric",
+      "input": {
+        "task": "Return only JSON with answer, value, and explanation. The scores are accuracy fractions from a single synthetic run; no statistical test, repeated-run evidence, uncertainty interval, or causal design is supplied. answer identifies the HIGHER observed accuracy: current if current>reference, reference if current<reference, and tie if equal. value is (current-reference)*100 as a JSON number in percentage points, not relative percent change. Explain the observed winner and signed difference consistently. Explicitly explain that this single run cannot establish statistical significance, stability across runs, causality, or general superiority; a tie does not prove equivalence. Describe evidence needed to assess those limits without inventing results.",
+        "current": "0.6482",
+        "reference": "0.6595",
+        "evidence": "Single synthetic run comparing two observed accuracy fractions; no statistical test, repeated runs, uncertainty interval, or causal design."
+      },
+      "expected": {
+        "answer": "reference",
+        "value": -1.13
+      }
+    },
+    {
+      "id": "G14-N-zero",
+      "kind": "numeric",
+      "input": {
+        "task": "Return only JSON with answer, value, and explanation. The scores are accuracy fractions from a single synthetic run; no statistical test, repeated-run evidence, uncertainty interval, or causal design is supplied. answer identifies the HIGHER observed accuracy: current if current>reference, reference if current<reference, and tie if equal. value is (current-reference)*100 as a JSON number in percentage points, not relative percent change. Explain the observed winner and signed difference consistently. Explicitly explain that this single run cannot establish statistical significance, stability across runs, causality, or general superiority; a tie does not prove equivalence. Describe evidence needed to assess those limits without inventing results.",
+        "current": "0.7764",
+        "reference": "0.7764",
+        "evidence": "Single synthetic run comparing two observed accuracy fractions; no statistical test, repeated runs, uncertainty interval, or causal design."
+      },
+      "expected": {
+        "answer": "tie",
+        "value": 0
+      }
+    },
+    {
+      "id": "G14-E-missing-test",
+      "kind": "evidence",
+      "input": {
+        "task": "Return only JSON with answer, value, and explanation. These are supplied synthetic observations from an observational design without randomized intervention or other causal identification. Classify the supplied statistical evidence: unknown if no valid statistical test is supplied; reject if a supplied valid prespecified test has p<alpha; fail_to_reject if it has p>=alpha, including p=alpha. Set value to null. Explain the decision using only supplied facts. Missing testing does not establish a non-significant result; failure to reject does not establish zero effect or equivalence; rejection alone does not establish practical importance or causality. Observational design limits causal inference but does not invalidate a supplied valid test's rejection decision. State the applicable limits and evidence needed to resolve them without inventing evidence.",
+        "facts": {
+          "synthetic": true,
+          "design": "Observational comparison of two pre-existing cohorts; no randomized intervention or other causal identification.",
+          "observed_mean_accuracy_difference_pp": 0.42,
+          "statistical_test": "not performed",
+          "valid_test": false,
+          "equivalence_test": false,
+          "uncertainty_interval": "not supplied",
+          "practical_importance_threshold": "not supplied"
+        }
+      },
+      "expected": {
+        "answer": "unknown",
+        "value": null
+      }
+    },
+    {
+      "id": "G14-E-p-equals-alpha",
+      "kind": "evidence",
+      "input": {
+        "task": "Return only JSON with answer, value, and explanation. These are supplied synthetic observations from an observational design without randomized intervention or other causal identification. Classify the supplied statistical evidence: unknown if no valid statistical test is supplied; reject if a supplied valid prespecified test has p<alpha; fail_to_reject if it has p>=alpha, including p=alpha. Set value to null. Explain the decision using only supplied facts. Missing testing does not establish a non-significant result; failure to reject does not establish zero effect or equivalence; rejection alone does not establish practical importance or causality. Observational design limits causal inference but does not invalidate a supplied valid test's rejection decision. State the applicable limits and evidence needed to resolve them without inventing evidence.",
+        "facts": {
+          "synthetic": true,
+          "design": "Observational comparison of matched existing records; no randomized intervention or other causal identification.",
+          "statistical_test": "Supplied valid prespecified two-sided test of mean paired accuracy difference.",
+          "null": "zero mean paired accuracy difference",
+          "valid_test": true,
+          "pre_specified": true,
+          "p": 0.025,
+          "alpha": 0.025,
+          "comparison_precision": "Supplied p and alpha are exact for this synthetic fixture, not rounded displays.",
+          "equivalence_test": false,
+          "effect_size": "not supplied",
+          "uncertainty_interval": "not supplied",
+          "practical_importance_threshold": "not supplied"
+        }
+      },
+      "expected": {
+        "answer": "fail_to_reject",
+        "value": null
+      }
+    },
+    {
+      "id": "G14-E-p-below-alpha",
+      "kind": "evidence",
+      "input": {
+        "task": "Return only JSON with answer, value, and explanation. These are supplied synthetic observations from an observational design without randomized intervention or other causal identification. Classify the supplied statistical evidence: unknown if no valid statistical test is supplied; reject if a supplied valid prespecified test has p<alpha; fail_to_reject if it has p>=alpha, including p=alpha. Set value to null. Explain the decision using only supplied facts. Missing testing does not establish a non-significant result; failure to reject does not establish zero effect or equivalence; rejection alone does not establish practical importance or causality. Observational design limits causal inference but does not invalidate a supplied valid test's rejection decision. State the applicable limits and evidence needed to resolve them without inventing evidence.",
+        "facts": {
+          "synthetic": true,
+          "design": "Observational comparison of matched existing records; no randomized intervention or other causal identification.",
+          "statistical_test": "Supplied valid prespecified two-sided test of mean paired accuracy difference.",
+          "null": "zero mean paired accuracy difference",
+          "valid_test": true,
+          "pre_specified": true,
+          "p": 0.003,
+          "alpha": 0.015,
+          "comparison_precision": "Supplied p and alpha are exact for this synthetic fixture, not rounded displays.",
+          "equivalence_test": false,
+          "effect_size": "not supplied",
+          "uncertainty_interval": "not supplied",
+          "practical_importance_threshold": "not supplied"
+        }
+      },
+      "expected": {
+        "answer": "reject",
+        "value": null
+      }
+    }
+  ],
+  "audit_contract": {
+    "source_read": "historical-evidence/control/future-fixed/audit_contract.py",
+    "policy": "both",
+    "executions": "Controller executes build_audit exactly once per test before dispatch, for six total deterministic audit executions. Retain each actual execution record. Reuse its returned object for both arms; never run a separate audit for the second arm.",
+    "numeric_algorithm": "Parse input.current and input.reference directly as Decimal strings. delta=(current-reference)*100. winner=current for delta>0, reference for delta<0, tie otherwise. Return winner, delta_pp=float(delta) as a JSON number, and units=percentage_points.",
+    "evidence_algorithm": "For these frozen fixtures, return unknown when facts has no p; otherwise compare Decimal(str(p)) with Decimal(str(alpha)), returning reject only for p<alpha and fail_to_reject otherwise. Return causality=not_established and equivalence=not_established.",
+    "payload_construction": "Deep-copy the complete frozen test.input. Add deterministic_audit equal to the actual execution.returned. Serialize that augmented object once as the user message and reuse the exact serialized message for both arms. Use the shared schema and sampling for both. Only the system prompt differs.",
+    "preserve_complete_tasks": "Do not use the historical build_pair numeric task overwrite unchanged: it replaces the complete task with a shorter instruction. Preserve the frozen task verbatim while retaining build_audit's arithmetic and evidence-status algorithms.",
+    "expected_returned_objects_for_offline_validation_only": {
+      "G14-N-positive": {
+        "winner": "current",
+        "delta_pp": 0.67,
+        "units": "percentage_points"
+      },
+      "G14-N-negative": {
+        "winner": "reference",
+        "delta_pp": -1.13,
+        "units": "percentage_points"
+      },
+      "G14-N-zero": {
+        "winner": "tie",
+        "delta_pp": 0,
+        "units": "percentage_points"
+      },
+      "G14-E-missing-test": {
+        "test_status": "unknown",
+        "causality": "not_established",
+        "equivalence": "not_established"
+      },
+      "G14-E-p-equals-alpha": {
+        "test_status": "fail_to_reject",
+        "causality": "not_established",
+        "equivalence": "not_established"
+      },
+      "G14-E-p-below-alpha": {
+        "test_status": "reject",
+        "causality": "not_established",
+        "equivalence": "not_established"
+      }
+    },
+    "execution_integrity": "The validation objects are not evidence of execution and must not substitute for executing the audit. No Qwen request is allowed if an audit fails, has missing fields, has the wrong types, or disagrees with the frozen expected result."
+  },
+  "controller_02_check": {
+    "timing": "Before Qwen dispatch and before the reviewer gate.",
+    "required_checks": [
+      "Save the frozen protocol, six actual audit execution records and all twelve exact request payloads.",
+      "Verify both historical system strings verbatim against the source config; selected changes its name only.",
+      "Verify exactly one successful actual audit execution per test, reused in both arms.",
+      "Verify paired user-message bytes, output schemas and sampling settings are identical; only system prompts differ.",
+      "Verify complete frozen tasks survive payload construction without the historical numeric overwrite.",
+      "Verify numeric audit winner, numeric delta_pp and percentage-point units, and evidence audit test_status against the frozen expectations.",
+      "Verify all six fixtures differ from the tests in both supplied G11 configs.",
+      "Verify the request plan has exactly twelve calls and no retries, followups or additional model calls."
+    ],
+    "failure_policy": "Stop before dispatch if any check fails. Do not silently change the frozen protocol."
+  },
+  "acceptance_rules": {
+    "per_arm": "An arm passes only if all six objective checks AND all six original-response explanation reviews pass.",
+    "objective": {
+      "schema": "Exactly answer, value and explanation with the shared required types and no additional fields.",
+      "answer": "Exact equality with each test.expected.answer.",
+      "numeric_value": "Finite JSON number with absolute error at most 1e-9 percentage points against test.expected.value; booleans and numeric strings fail.",
+      "evidence_value": "Must be JSON null.",
+      "numeric_tolerance_pp": 1e-09
+    },
+    "original_explanation_reviews": {
+      "source": "Inspect the complete original response text for every arm-test pair, including failed objective responses. Do not review reconstructed, corrected or summarized responses.",
+      "common": "Require a nonempty explanation consistent with the objective fields and actual audit. Reject invented tests, results, mechanisms, uncertainty intervals, or material unsupported claims. Correct fields alone do not excuse omitted requested limits.",
+      "numeric": "Require the observed winner and signed difference in percentage points; explicit single-run, missing-test, stability and causal limits; no general superiority claim; and relevant evidence needed to assess those limits. The zero case must distinguish an observed tie from established equivalence.",
+      "missing_test": "Require unknown because no valid test is supplied. Do not equate missing testing with a non-significant result. Explain observational causal limits, absence of established equivalence, and need for a valid test and suitable causal evidence.",
+      "p_equals_alpha": "Require failure to reject under the strict p<alpha rule. Do not claim zero effect or equivalence. Explain observational causal limits and the missing effect-size, uncertainty and practical-importance evidence.",
+      "p_below_alpha": "Require rejection of the supplied null under the valid prespecified test. Do not claim that observational design negates the test decision, or that rejection establishes causality, practical importance, benefit direction or equivalence. Explain the missing effect-size, uncertainty and causal evidence."
+    },
+    "both_pass": "Record both arms as passing this finite assisted protocol. Make no superiority claim and designate no superior champion.",
+    "attribution_limits": "Any observed difference concerns these historical prompts under equal deterministic assistance on these six synthetic fixtures. It does not establish unaided arithmetic improvement, cross-dataset ranking, general model superiority, or real-world causal effects.",
+    "historical_results": "Preserve G11 as-run evidence, scores and rejections. G14 does not retroactively repair or reclassify G11."
+  },
+  "unseen_check": {
+    "status": "verified_against_both_supplied_G11_configs",
+    "sources": [
+      "historical-evidence/control/batches/batch-1/config.json",
+      "historical-evidence/control/batches/batch-2/config.json"
+    ],
+    "historical_numeric_pairs": [
+      [
+        "0.7312",
+        "0.7305"
+      ],
+      [
+        "0.8021",
+        "0.8096"
+      ],
+      [
+        "0.6843",
+        "0.6927"
+      ],
+      [
+        "0.8576",
+        "0.8539"
+      ]
+    ],
+    "historical_supplied_p_alpha_pairs": [
+      [
+        0.18,
+        0.05
+      ],
+      [
+        0.008,
+        0.01
+      ],
+      [
+        0.006,
+        0.02
+      ],
+      [
+        0.14,
+        0.04
+      ]
+    ],
+    "findings": "All three G14 numeric pairs are new; G11 contains no numeric tie fixture. Both supplied G14 p/alpha pairs are new; G11 contains no p=alpha fixture. The missing-test fixture has new synthetic observations and a distinct complete facts object. All six IDs and complete inputs differ from both G11 configs.",
+    "limits": "Unseen means no fixture reuse in the two supplied G11 configs. The task categories and status labels intentionally recur. No claim is made about model training exposure or other unprovided runs."
+  },
+  "what_changed": [
+    "Recovered and verified the historical prompts from the corrected full paths; renamed selected to mapping-contract without changing its system prompt.",
+    "Removed asymmetric assistance by requiring one actual deterministic audit per test shared identically by both arms.",
+    "Aligned audit fields with the mapping contract: winner and numeric delta_pp for numeric cases, test_status for evidence cases.",
+    "Made higher-score winner, signed percentage-point units and inference limits explicit in every complete shared task.",
+    "Prevented the historical build_pair task overwrite from removing required inference-limit instructions.",
+    "Replaced G11 fixtures with three new signed-delta cases and three new evidence cases, including zero delta and p=alpha boundaries.",
+    "Required all six objective checks and every original-response explanation review, with no superiority claim when both arms pass."
+  ],
+  "next_decision": {
+    "rule": "Controller first saves exact payloads and passes the 02 check. Then use the authorized twelve-request budget exactly once per arm-test pair. Review all original responses under the frozen rules. If only mapping-contract passes, accept it only for this finite assisted protocol; if only C1 passes, retain C1 only for this scope; if both pass, record both passing without superiority or champion designation; if neither passes, accept neither. Any request failure prevents that arm from passing. No outcome authorizes retries, followups, extra requests or fixture changes.",
+    "current_state": "Proposal frozen; audit executions, payload saving, controller 02 verification, Qwen execution and response reviews remain unperformed by this researcher."
+  }
+}

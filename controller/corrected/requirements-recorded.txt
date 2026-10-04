@@ -1,0 +1,5 @@
+# Recorded local SDK versions; fresh installation not tested
+omnigent==0.16.0
+openai==2.44.0
+openai-agents==0.13.6
+httpx==0.28.1

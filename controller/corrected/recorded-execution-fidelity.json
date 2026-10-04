@@ -1,0 +1,10 @@
+{
+  "actual_requests": 12,
+  "historical_requests": 24,
+  "separate_budget": 12,
+  "all_sent_payloads_equal_frozen": true,
+  "complete": true,
+  "remote_exited": true,
+  "forced_cancel_tested": false,
+  "same_audits": true
+}

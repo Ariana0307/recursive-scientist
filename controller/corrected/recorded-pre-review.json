@@ -1,0 +1,26 @@
+{
+  "approved": true,
+  "reasons": [
+    "Both outstanding changes are satisfied: before reservation or remote launch, the controller requires successful preflight with a matching configuration hash, exact reviewer-manifest equality, and matching current file hashes. Execution-gate flags derive from those verified records.",
+    "All twelve individual previews were read completely without truncation. Each baseline/selected pair has identical task content, audit facts, schema and generation settings; the intended system instructions differ. Audit answers agree with the supplied numerical and statistical facts.",
+    "The runner retains frozen-payload equality, the locked 12-request cap, disabled retries, pre-loop gate verification, and acceptance requiring no recorded errors and exactly one raw stop finish reason.",
+    "Approval binds explicitly to the complete manifest below and covers the bounded batch, not its future results or broader scientific claims. Manifest digests are copied from the supplied candidate; execution-time code enforces file-hash equality."
+  ],
+  "required_changes": [],
+  "reviewed_sha256": {
+    "config.json": "428dfeee40e87cfa56bd67526598cd5eb9ae814aa36f19d136e3e15390c7c773",
+    "qwen_batch.py": "b8184ed85918091b8907171cfd1b5b30a7aded061cdf65397f7ae8372d91a8e5",
+    "payloads/batch-1-G14-E-missing-test-baseline.json": "9c4b42e12d3d03615e85c362be887ef749b08faedb0a67585bdea8f675482863",
+    "payloads/batch-1-G14-E-missing-test-selected.json": "197a3740ef66947a4faf270e464ddb5a2c51dc9b5047c10e9b42c36b2d007633",
+    "payloads/batch-1-G14-E-p-below-alpha-baseline.json": "8595e04d7d4263bba1db21f4bd77a4c08405af6647ea2c4f1da0be9d5a3a4710",
+    "payloads/batch-1-G14-E-p-below-alpha-selected.json": "d6417c77c786c4901ef475550833d6281e7d5096d9337f5a8cb120b1c4d81d69",
+    "payloads/batch-1-G14-E-p-equals-alpha-baseline.json": "91d90f800e50b31e843186a1d03527bb0fbe58d7af8914518d5e0404efa87981",
+    "payloads/batch-1-G14-E-p-equals-alpha-selected.json": "a1ad1cb992888d8130676e36715cfbb8b43ac45c032fc88400ac137a51725344",
+    "payloads/batch-1-G14-N-negative-baseline.json": "d9e2c7fa88ad42066361587f5eea45c4f33c552d52bf77131bd5192d85068d3a",
+    "payloads/batch-1-G14-N-negative-selected.json": "b032931f47ae6d3cb8b862d5f8feb0bddd3bdf3ec88376ffc69c78add4faaa67",
+    "payloads/batch-1-G14-N-positive-baseline.json": "38c7624cd3a9774a9a25ce8a1e8e2678219b453e683872e905db79916c1e5b38",
+    "payloads/batch-1-G14-N-positive-selected.json": "783a2cf7fa0f9a6d71caa71429e2028acc467e45501b11e1c5367601fc5b634d",
+    "payloads/batch-1-G14-N-zero-baseline.json": "03a684aebce0183e349b81a7c03c170e456f1b036650466980f3b26d29732784",
+    "payloads/batch-1-G14-N-zero-selected.json": "63a28f21313c55a76a1d3ef6375bf213524e884557e6be3cfe660f808d9ed696"
+  }
+}

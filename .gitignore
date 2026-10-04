@@ -32,3 +32,14 @@ debug_current/
 
 # Test caches
 .pytest_cache/
+
+# Public release: keep generated/private runtime out of Git
+node_modules/
+.output/
+.nitro/
+.tanstack/
+__pycache__/
+*.pyc
+*.zip
+*.map
+private-runtime/

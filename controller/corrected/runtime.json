@@ -1,0 +1,17 @@
+{
+  "run_id": "example-corrected-paired-run",
+  "run_root": "./runs/example-corrected-paired-run",
+  "ssh_host": "configured-model-worker",
+  "ssh_identity_file": null,
+  "remote_root": "/srv/research/example-corrected-paired-run",
+  "remote_python": "/srv/research/venv/bin/python",
+  "remote_expected_hostname": "model-worker",
+  "scorer_ssh_host": "configured-scoring-worker",
+  "codex_binary": "codex",
+  "model": "qwen3:4b-instruct",
+  "model_base_url": "http://127.0.0.1:11434/v1",
+  "request_limit": 12,
+  "retry_limit": 0,
+  "per_request_timeout_seconds": 120,
+  "enable_execution": false
+}

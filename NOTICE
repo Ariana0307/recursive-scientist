@@ -1,0 +1,7 @@
+Recursive Scientist — attribution notice
+
+This candidate contains this project's website, original research records and adapted controller code. No license for the project's original material is granted by this notice; see LICENSE_STATUS.md.
+
+Omnigent is an external orchestration dependency. Its upstream Apache-2.0 LICENSE and NOTICE are preserved in third-party/. Those terms cover Omnigent, not an automatic license grant for this project. Codex is an external agent harness. Qwen is the evaluated model; weights are not included. The AI Scientist-v2 is cited as related work, not bundled or claimed as a dependency.
+
+Website dependency licenses remain their respective authors' licenses and can be inspected from the locked package dependencies. Dependencies are not vendored. The package lockfile and recorded Python dependency versions identify dependencies without transferring provider accounts or credentials. User-supplied narration is not relicensed here.

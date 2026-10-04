@@ -1,0 +1,11 @@
+{
+  "stage": "final_approved_source_snapshot",
+  "original_protocol_review_approved": true,
+  "original_requests": 12,
+  "original_payload_fidelity": true,
+  "public_adaptation_live_requests": 0,
+  "public_adaptation_validation": "actual SDK 12 payload matches and gate negative tests passed offline",
+  "new_environment_live_validation": false,
+  "forced_cancel_tested": false,
+  "approval_applies_to": "original source hashes only, not edited public adaptation"
+}

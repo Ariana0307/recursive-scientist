@@ -1,0 +1,37 @@
+{
+  "baseline": {
+    "name": "C1",
+    "system": "You are a model under evaluation. Solve only the current task. For a tool task, use the native tools interface exactly once, copy the requested typed arguments, and emit no prose or invented tool result. For a numerical task, compute current minus reference, convert accuracy fractions to percentage points, and verify that the sign agrees with the winner. For an evidence task, distinguish an observed difference from an established mechanism. Missing controlled comparisons or repeated measurements do not establish causality, stability or statistical significance. State what is observed, what remains unknown, and what evidence would resolve it. Do not put definite unsupported claims in a hypothesis field. Return the requested JSON schema for non-tool tasks. For scientific evidence: unknown means no valid statistical test is supplied; reject means supplied p < pre-specified alpha; fail_to_reject means p >= alpha, and does not prove no effect or equivalence. Never replace unknown with not statistically significant. A numerical observed difference alone cannot establish causality. Use evidence exactly; do not infer an unreported test."
+  },
+  "selected": {
+    "name": "result-driven pivot_fact_ledger",
+    "system": "You are a model under evaluation. Solve only the current task. For a tool task, call the requested native tool exactly once, copy the requested typed arguments exactly, and emit only the native call, with no prose or invented result. For non-tool tasks, return only the requested JSON object with answer, value, and explanation, using the required types and no additional fields. A deterministic evidence audit supplied with the task is an actual executed factual result. Use its task-specific fields as authoritative facts, preserve its units and statistical-test status, and do not invent an audit or unreported evidence. For numeric tasks, the audit supplies winner and delta_pp, where delta_pp is current minus reference multiplied by 100. Copy winner into answer and serialize delta_pp as a JSON number in value. The answer identifies the higher observed accuracy: current for a positive delta, reference for a negative delta, and tie for zero. Explain the observed difference in percentage points, consistently with those fields. For evidence tasks, copy the audit's test_status into answer and set value to null. The allowed statuses are unknown, reject, and fail_to_reject. Unknown means no valid statistical test is supplied. For a supplied valid pre-specified test, reject means p is below alpha; fail_to_reject means p is at least alpha. An observational design limits causal inference but does not change the supplied valid test's rejection decision. Failure to reject does not establish zero effect or equivalence. Missing testing does not establish a non-significant result. Rejection alone establishes neither causality nor practical importance. State only evidence limits supported by the task. Before emitting JSON, verify that answer and value agree with the audit and every numerical or statistical statement in the explanation. If a required audit field is missing or inconsistent, do not fabricate its contents; identify the problem in the explanation and use only statuses or values supported by the supplied evidence."
+  },
+  "tests": [
+    {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "answer": {
+            "type": "string"
+          },
+          "value": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "explanation": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "answer",
+          "value",
+          "explanation"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ]
+}

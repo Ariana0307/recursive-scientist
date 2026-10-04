@@ -1,0 +1,51 @@
+{
+  "messages": [
+    {
+      "content": "You are a model under evaluation. Solve only the current task. For a tool task, call the requested native tool exactly once, copy the requested typed arguments exactly, and emit only the native call, with no prose or invented result. For non-tool tasks, return only the requested JSON object with answer, value, and explanation, using the required types and no additional fields. A deterministic evidence audit supplied with the task is an actual executed factual result. Use its task-specific fields as authoritative facts, preserve its units and statistical-test status, and do not invent an audit or unreported evidence. For numeric tasks, the audit supplies winner and delta_pp, where delta_pp is current minus reference multiplied by 100. Copy winner into answer and serialize delta_pp as a JSON number in value. The answer identifies the higher observed accuracy: current for a positive delta, reference for a negative delta, and tie for zero. Explain the observed difference in percentage points, consistently with those fields. For evidence tasks, copy the audit's test_status into answer and set value to null. The allowed statuses are unknown, reject, and fail_to_reject. Unknown means no valid statistical test is supplied. For a supplied valid pre-specified test, reject means p is below alpha; fail_to_reject means p is at least alpha. An observational design limits causal inference but does not change the supplied valid test's rejection decision. Failure to reject does not establish zero effect or equivalence. Missing testing does not establish a non-significant result. Rejection alone establishes neither causality nor practical importance. State only evidence limits supported by the task. Before emitting JSON, verify that answer and value agree with the audit and every numerical or statistical statement in the explanation. If a required audit field is missing or inconsistent, do not fabricate its contents; identify the problem in the explanation and use only statuses or values supported by the supplied evidence.",
+      "role": "system"
+    },
+    {
+      "role": "user",
+      "content": "{\"task\": \"Return only JSON with answer, value, and explanation. These are supplied synthetic observations from an observational design without randomized intervention or other causal identification. Classify the supplied statistical evidence: unknown if no valid statistical test is supplied; reject if a supplied valid prespecified test has p<alpha; fail_to_reject if it has p>=alpha, including p=alpha. Set value to null. Explain the decision using only supplied facts. Missing testing does not establish a non-significant result; failure to reject does not establish zero effect or equivalence; rejection alone does not establish practical importance or causality. Observational design limits causal inference but does not invalidate a supplied valid test's rejection decision. State the applicable limits and evidence needed to resolve them without inventing evidence.\", \"facts\": {\"synthetic\": true, \"design\": \"Observational comparison of matched existing records; no randomized intervention or other causal identification.\", \"statistical_test\": \"Supplied valid prespecified two-sided test of mean paired accuracy difference.\", \"null\": \"zero mean paired accuracy difference\", \"valid_test\": true, \"pre_specified\": true, \"p\": 0.025, \"alpha\": 0.025, \"comparison_precision\": \"Supplied p and alpha are exact for this synthetic fixture, not rounded displays.\", \"equivalence_test\": false, \"effect_size\": \"not supplied\", \"uncertainty_interval\": \"not supplied\", \"practical_importance_threshold\": \"not supplied\"}, \"deterministic_audit\": {\"test_status\": \"fail_to_reject\", \"causality\": \"not_established\", \"equivalence\": \"not_established\"}}"
+    }
+  ],
+  "model": "qwen3:4b-instruct",
+  "max_tokens": 2048,
+  "parallel_tool_calls": false,
+  "reasoning_effort": "none",
+  "stream": true,
+  "temperature": 0,
+  "stream_options": {
+    "include_usage": true
+  },
+  "response_format": {
+    "type": "json_schema",
+    "json_schema": {
+      "name": "answer",
+      "strict": true,
+      "schema": {
+        "type": "object",
+        "properties": {
+          "answer": {
+            "type": "string"
+          },
+          "value": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "explanation": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "answer",
+          "value",
+          "explanation"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}

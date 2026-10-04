@@ -1,0 +1,16 @@
+# Prepared configuration only. No service has been created by this task.
+services:
+  - type: web
+    name: recursive-scientist
+    runtime: node
+    plan: free
+    rootDir: website
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    autoDeployTrigger: off
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: 22.23.3
+      - key: HOST
+        value: 0.0.0.0
