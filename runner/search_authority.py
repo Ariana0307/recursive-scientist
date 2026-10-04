@@ -28,6 +28,8 @@ class SearchAuthority:
         self.private=Path(private_root) if private_root is not None else PRIVATE
         self.campaign=self.private/'search-campaigns'/self.plan.campaign_id
         self.authority=self.private/'search-authority'/self.plan.campaign_id
+        # Independent of campaign names and both historical budget directories.
+        self.fence=self.private/'search-execution-g6'/self.worker_id
 
     @classmethod
     def local(cls):
@@ -76,28 +78,79 @@ class SearchAuthority:
             raise AdmissionError('search signature mismatch')
         return obj['payload']
 
-    def authorize(self):
+    def frozen_identity(self):
+        freeze=json.loads(read_bytes(ROOT/'configs/g5/freeze-manifest.json'))
+        if self.plan.digest()!=freeze['plan_hashes'][self.worker_id]:
+            raise AdmissionError('G5 frozen plan identity mismatch')
+
+    def mirrored(self,name):
+        raw=read_bytes(self.fence/name)
+        if any(read_bytes(p/name)!=raw for p in (self.authority,self.campaign)):
+            raise AdmissionError('persistent fence mirror mismatch')
+        return self.verify(json.loads(raw))
+
+    def append_mirrored(self,name,payload):
+        receipt=self.sign(payload)
+        # A crash leaves a detectable mismatch, never a fresh allowance.
+        for root in (self.fence,self.authority,self.campaign):json_new(root/name,receipt)
+
+    def released_through(self):
+        self.secure(self.fence)
+        names=[p.name for p in sorted(self.fence.glob('release-*.json'))]
+        if not names or any(names!=[p.name for p in sorted(root.glob('release-*.json'))] for root in (self.authority,self.campaign)):
+            raise AdmissionError('release journal missing or mirror mismatch')
+        previous=0
+        for i,name in enumerate(names,1):
+            if name!=f'release-{i:02}.json':raise AdmissionError('release journal gap')
+            record=self.mirrored(name)
+            n=record['through_slot']
+            if record['plan_hash']!=self.plan.digest() or record['previous_slot']!=previous or type(n) is not int or not previous<n<=6:
+                raise AdmissionError('invalid release record')
+            if i==1 and n!=1:raise AdmissionError('initial release must be slot 1')
+            previous=n
+        return previous
+
+    def extend_release(self,through_slot,*,operator,reason):
+        """Trusted operator only; never registered as a research capability."""
+        self.load()
+        if not operator.strip() or not reason.strip():raise AdmissionError('explicit operator and reason required')
+        fd=lock(self.fence/'budget.lock',blocking=True)
+        try:
+            previous=self.released_through();self.slots()
+            if type(through_slot) is not int or not previous<through_slot<=6:raise AdmissionError('release must increase within six-slot plan')
+            count=len(list(self.fence.glob('release-*.json')))
+            self.append_mirrored(f'release-{count+1:02}.json',self.release_record(previous,through_slot,operator,reason))
+        finally:os.close(fd)
+
+    def release_record(self,previous,n,operator,reason):
+        return dict(plan_hash=self.plan.digest(),previous_slot=previous,through_slot=n,
+                    operator=operator,reason=reason,code_commit=legacy.current_commit(),
+                    created_at=datetime.datetime.now(datetime.timezone.utc).isoformat())
+
+    def authorize(self,*,operator,reason):
         """Future trusted-operator API only. G4 CLI has no authorization command."""
-        if self.plan.status!='approved_for_future_execution':raise AdmissionError('draft plan cannot be authorized')
+        self.frozen_identity()
+        if not operator.strip() or not reason.strip():raise AdmissionError('explicit operator and reason required')
         expected=self.expected()
         # Approved plan must be the versioned allowlisted file in the clean checkout.
         disk=SearchPlan.model_validate_json(read_bytes(PLAN_FILES[self.worker_id]))
         if disk!=self.plan:raise AdmissionError('plan not the committed worker plan')
-        safe_dir(self.authority.parent);safe_dir(self.campaign.parent)
+        safe_dir(self.authority.parent);safe_dir(self.campaign.parent);safe_dir(self.fence.parent)
+        # Exclusive persistent identity: deleting old ledgers cannot re-authorize.
+        self.fence.mkdir(mode=0o700)
         self.authority.mkdir(mode=0o700);self.campaign.mkdir(mode=0o700)
         atomic_new(self.authority/'signing.key',secrets.token_bytes(32))
-        signed=self.sign(expected)
-        json_new(self.authority/'authorization.json',signed);json_new(self.campaign/'authorization.json',signed)
+        self.append_mirrored('authorization.json',expected)
+        self.append_mirrored('release-01.json',self.release_record(0,1,operator,reason))
         for p in (self.authority/'signing.key',self.authority/'authorization.json',self.campaign/'authorization.json'):p.chmod(0o400)
         return expected
 
     def load(self):
-        if self.plan.status!='approved_for_future_execution':raise AdmissionError('search plan not approved; no execution')
+        self.frozen_identity()
         if not self.authority.exists() or not self.campaign.exists():raise AdmissionError('search campaign not authorized')
         self.secure(self.campaign);self.secure(self.authority)
-        raw=read_bytes(self.authority/'authorization.json')
-        if raw!=read_bytes(self.campaign/'authorization.json'):raise AdmissionError('authorization mirror mismatch')
-        obj=self.verify(json.loads(raw))
+        obj=self.mirrored('authorization.json')
+        self.released_through()
         if obj!=self.expected():raise AdmissionError('plan/role/commit authorization mismatch')
         return obj
 
@@ -105,12 +158,14 @@ class SearchAuthority:
         primary=sorted(self.authority.glob('slot-*.json'))
         if [p.name for p in primary]!=[p.name for p in sorted(self.campaign.glob('slot-*.json'))]:
             raise AdmissionError('reservation mirror missing; review required')
+        if [p.name for p in primary]!=[p.name for p in sorted(self.fence.glob('slot-*.json'))]:
+            raise AdmissionError('persistent slot fence mismatch')
         records=[]
         for n,p in enumerate(primary,1):
             if p.name!=f'slot-{n}.json':raise AdmissionError('noncontiguous ledger')
             raw=read_bytes(p)
             if raw!=read_bytes(self.campaign/p.name):raise AdmissionError('reservation mirror mismatch')
-            record=self.verify(json.loads(raw))
+            record=self.mirrored(p.name)
             if (record['slot']!=n or record['campaign_id']!=self.plan.campaign_id or record['plan_hash']!=self.plan.digest()):
                 raise AdmissionError('reservation plan mismatch')
             records.append(record)
@@ -118,15 +173,20 @@ class SearchAuthority:
         return records
 
     def bind(self,number,raw):
+        if number==1 and self.worker_id=='worker-02':
+            p=Parameters.model_validate_json(raw)
+            if p.model_dump()!={'learning_rate':.003,'weight_decay':.0001,'augmentation':'none'}:
+                raise AdmissionError('preserve historical AI first proposal')
         return bind_request(self.plan,number,raw,legacy.current_commit(),self.worker_id,self.role)
 
     def reserve(self,raw):
         self.load()
         # Reject control fields before the lock and before any reservation.
         Parameters.model_validate_json(raw)
-        fd=lock(self.authority/'budget.lock',blocking=True)
+        fd=lock(self.fence/'budget.lock',blocking=True)
         try:
             auth=self.load();prior=self.slots();number=len(prior)+1
+            if number>self.released_through():raise AdmissionError('slot not explicitly released')
             if number>self.plan.max_starts:raise AdmissionError('search start budget exhausted')
             if prior:
                 previous=self.campaign/f'start-{number-1}'
@@ -141,8 +201,7 @@ class SearchAuthority:
                     'seed':req.seed,'request_sha256':hashlib.sha256(req.model_dump_json().encode()).hexdigest(),
                     'parent_pid':os.getpid(),'code_commit':req.code_version,'evaluation_sha256':EVALUATION_HASH,
                     'created_at':datetime.datetime.now(datetime.timezone.utc).isoformat()}
-            receipt=self.sign(record)
-            json_new(self.authority/f'slot-{number}.json',receipt);json_new(self.campaign/f'slot-{number}.json',receipt)
+            self.append_mirrored(f'slot-{number}.json',record)
             return req,record
         finally:os.close(fd)
 
@@ -156,9 +215,10 @@ class SearchAuthority:
         required=fcntl.F_SEAL_WRITE|fcntl.F_SEAL_GROW|fcntl.F_SEAL_SHRINK|fcntl.F_SEAL_SEAL
         if fcntl.fcntl(fd,fcntl.F_GET_SEALS)&required!=required:raise AdmissionError('unsealed search capability')
         os.lseek(fd,0,os.SEEK_SET);receipt=self.verify(json.loads(os.read(fd,16384)))
-        self.load();locked=lock(self.authority/'budget.lock',blocking=True)
+        self.load();locked=lock(self.fence/'budget.lock',blocking=True)
         try:
             records=self.slots();n=receipt['slot']
+            if n>self.released_through():raise AdmissionError('child slot not released')
             if not 1<=n<=self.plan.max_starts or n>len(records) or receipt!=records[n-1]:raise AdmissionError('unreserved search child')
             if receipt['parent_pid']!=os.getppid():raise AdmissionError('search parent mismatch')
             attempt=self.campaign/f'start-{n}'
@@ -167,6 +227,7 @@ class SearchAuthority:
             expected=self.bind(n,json.dumps(parameters))
             if req!=expected or hashlib.sha256(req.model_dump_json().encode()).hexdigest()!=receipt['request_sha256']:
                 raise AdmissionError('child request not in exact plan/role/seed')
+            atomic_new(self.fence/f'claimed-{n}',b'one child forever per slot\n')
             atomic_new(self.authority/f'claimed-{n}',b'one search child before GPU\n')
             atomic_new(attempt/'child-started',b'authorized search child\n')
             return req,attempt,receipt

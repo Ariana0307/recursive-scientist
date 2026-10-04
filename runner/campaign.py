@@ -87,6 +87,7 @@ def expected_authority():
 
 
 def authorize():
+    raise AdmissionError('G6 requires the released search entry; legacy execution disabled')
     """Trusted-operator-only CLI, never exposed as a scientific agent tool."""
     expected = expected_authority()
     campaign, authority = paths()
@@ -152,6 +153,7 @@ def request_from_parameters(raw):
 
 
 def reserve(request):
+    raise AdmissionError('G6 requires the released search entry; legacy execution disabled')
     """Hold trusted authority lock across admission; primary journal survives mirror failure."""
     campaign, authority = paths()
     load_authority()
@@ -192,6 +194,7 @@ def sealed_capability(reservation):
 
 
 def claim_child(fd):
+    raise AdmissionError('G6 requires the released search entry; legacy execution disabled')
     """Actual training entry needs a sealed inherited receipt AND the persistent slot."""
     seals = fcntl.fcntl(fd, fcntl.F_GET_SEALS)
     required = fcntl.F_SEAL_WRITE | fcntl.F_SEAL_GROW | fcntl.F_SEAL_SHRINK | fcntl.F_SEAL_SEAL

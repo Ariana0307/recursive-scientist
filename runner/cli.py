@@ -37,6 +37,7 @@ def result_payload(request, status, started, elapsed, device, metrics=None, erro
 
 
 def run_request(raw, smoke=False):
+    raise AdmissionError('G6 requires the released search entry; legacy execution disabled')
     # Schema validation and approval always precede filesystem allocation or GPU imports.
     request = ExperimentConfig.model_validate_json(raw)
     check_checkout(request)

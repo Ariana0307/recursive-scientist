@@ -12,7 +12,7 @@ from pathlib import Path
 from schemas.contracts import ExperimentConfig
 from schemas.split import split_hash, split_indices
 from runner.data import load_training
-from runner.storage import atomic_new, digest, json_new, read_bytes
+from runner.storage import AdmissionError, atomic_new, digest, json_new, read_bytes
 
 ROOT = Path(__file__).resolve().parents[1]
 PRIVATE = Path.home() / 'recursive-scientist-local'
@@ -55,6 +55,7 @@ def preflight():
 
 
 def child(attempt):
+    raise AdmissionError('G6 requires the released search entry; legacy execution disabled')
     """Only supervisor creates these fixed private paths; context is never agent input."""
     request = ExperimentConfig.model_validate_json(read_bytes(attempt.parent / 'request.json'))
     check_checkout(request)

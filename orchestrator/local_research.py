@@ -59,9 +59,6 @@ class Choice(Closed):
         allowed = ('enable', 'disable') if self.variable == 'augmentation' else ('lower', 'higher')
         if self.direction not in allowed:
             raise ValueError('direction does not match variable')
-        # Baseline has no augmentation; disabling it would not explore a new setting.
-        if self.variable == 'augmentation' and self.direction == 'disable':
-            raise ValueError('baseline already has augmentation disabled')
         return self
 
 
@@ -90,17 +87,23 @@ class Planner(Choice):
     action: Literal['propose_only_no_dispatch']
 
 
-def sample_proposal(plan: Planner, hypotheses: Hypothesis, seed=20261004):
+def sample_proposal(plan: Planner, hypotheses: Hypothesis, seed=20261004, *, context_parameters=None):
     chosen = next(c for c in hypotheses.candidates if c.hypothesis_id == plan.hypothesis_id)
     if (chosen.variable, chosen.direction) != (plan.variable, plan.direction):
         raise ValueError('planner changed the referenced hypothesis')
     base = {'learning_rate':.001, 'weight_decay':.0001, 'augmentation':'none'}
+    if context_parameters is not None:
+        from orchestrator.research_tools import Proposal
+        base=Proposal.model_validate(context_parameters).model_dump()
+    context=dict(base)
     space = {'learning_rate':[.0003,.001,.003], 'weight_decay':[0.,.0001,.001], 'augmentation':['none','basic']}
     v,d = plan.variable,plan.direction
     options = ([x for x in space[v] if x < base[v]] if d == 'lower' else
-               [x for x in space[v] if x > base[v]] if d == 'higher' else ['basic'])
-    base[v] = random.Random(seed).choice(options)
+               [x for x in space[v] if x > base[v]] if d == 'higher' else ['basic'] if d=='enable' else ['none'])
+    # At a grid boundary retaining the completed configuration is valid.
+    base[v] = random.Random(seed).choice(options) if options else base[v]
     return {'status':'proposed_not_authorized', 'sampler':'Python random.Random.choice', 'sampler_seed':seed,
+            'context_parameters':context,'direction_has_alternative':bool(options),
             'selection':plan.model_dump(), 'parameters':dict(base,epochs=3,batch_size=128,split_seed=20261003,
              model='small-cnn-v1',dataset='cifar10-python-v1'), 'training_dispatched':False}
 
@@ -125,7 +128,9 @@ class TimedStream(httpx.AsyncByteStream):
 
 class GuardedTransport(httpx.AsyncBaseTransport):
     """Checks every generation dispatch, including SDK/Omnigent internal retries."""
-    def __init__(self, root, inner=None, allowed_tool_names=()):
+    def __init__(self, root, inner=None, allowed_tool_names=(), *, max_requests=MAX_REQUESTS):
+        if type(max_requests) is not int or not 1<=max_requests<=8:raise ValueError('request budget above eight')
+        self.max_requests=max_requests
         self.allowed_tool_names = frozenset(allowed_tool_names)
         self.root = root
         self.inner = inner or httpx.AsyncHTTPTransport(retries=0, trust_env=False)
@@ -167,7 +172,7 @@ class GuardedTransport(httpx.AsyncBaseTransport):
         with (self.root/'budget.lock').open('a') as lock:
             fcntl.flock(lock,fcntl.LOCK_EX)
             existing = sorted(self.root.glob('request-*.json'))
-            if len(existing)>=MAX_REQUESTS: raise ValueError('six generation request budget exhausted')
+            if len(existing)>=self.max_requests: raise ValueError('generation request budget exhausted')
             n=len(existing)+1
             save(self.root/f'request-{n:02}.json',{'number':n,'role':self.role,'model':MODEL,
                  'max_tokens':body['max_tokens'],'timeout_seconds':TIMEOUT,'tool_count':len(body.get('tools', [])),
@@ -186,6 +191,7 @@ class GuardedTransport(httpx.AsyncBaseTransport):
 
 
 async def run(root, baseline):
+    raise ValueError('G6 live generation requires verified post-experiment live_feedback entry')
     os.environ['OMNIGENT_DATA_DIR'] = str(root/'omnigent-state')
     from openai import AsyncOpenAI
     from omnigent.inner.openai_agents_sdk_executor import OpenAIAgentsSDKExecutor
@@ -255,6 +261,7 @@ async def run(root, baseline):
 
 
 def main():
+    raise ValueError('G6 live generation requires verified post-experiment live_feedback entry')
     p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--baseline',type=Path,required=True)
     args=p.parse_args();args.output.mkdir(mode=0o700,parents=True,exist_ok=True)
     asyncio.run(run(args.output,json.loads(args.baseline.read_text())))

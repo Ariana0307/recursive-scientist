@@ -61,9 +61,10 @@ def stable_bytes(obj):return json.dumps(obj,sort_keys=True,separators=(',',':'),
 
 class ResearchCapabilities:
     def __init__(self,snapshot_bytes,expected_sha256,output_dir,*,mode):
-        if mode not in ('cpu_mock','future_authorized'):raise ValueError('explicit execution mode required')
+        if mode not in ('cpu_mock','live'):raise ValueError('explicit execution mode required')
         if sha(snapshot_bytes)!=expected_sha256:raise ValueError('trusted snapshot digest mismatch')
         self._history=VisibleHistory.model_validate_json(snapshot_bytes)
+        if mode=='live' and self._history.current_round<2:raise ValueError('actual post-experiment AI results required')
         self._history_bytes=self._history.model_dump_json().encode()
         self.snapshot_hash=expected_sha256;self.mode=mode
         self.output=Path(output_dir);self.output.mkdir(parents=True,exist_ok=True)
@@ -87,7 +88,7 @@ class ResearchCapabilities:
             n=self._history.current_round
             if n==1 and parameters!={'learning_rate':.003,'weight_decay':.0001,'augmentation':'none'}:
                 raise ValueError('AI trial 1 must preserve the real G4 proposal')
-            record={'task_id':'RS-20261004-G5','revision':'r1','status':'proposed_not_authorized','mode':self.mode,'round':n,'seed':41+n,
+            record={'task_id':'RS-20261004-G6','revision':'r1','status':'proposed_not_authorized','mode':self.mode,'round':n,'seed':41+n,
                     'worker_id':'worker-02' if n%2 else 'worker-01','role':'02_deploy' if n%2 else '01_train',
                     'parameters':parameters,'history_sha256':self.snapshot_hash,'training_dispatched':False}
             record['proposal_id']='proposal-'+sha(stable_bytes(record))[:24]

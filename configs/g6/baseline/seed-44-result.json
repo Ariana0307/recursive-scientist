@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "experiment_id": "G3-r1-baseline-seed-44",
+  "seed": 44,
+  "config": {
+    "seed": 44,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "augmentation": "none",
+    "epochs": 3,
+    "batch_size": 128,
+    "split_seed": 20261003,
+    "model": "small-cnn-v1",
+    "dataset": "cifar10-python-v1",
+    "timeout_seconds": 300
+  },
+  "code_version": "931049af15ddafa12a5163e924a3ea84bbfbbf3f",
+  "config_hash": "d673493bf3a6f91f7f6b6e16294828dc33803f648f30b54689336ac5e4229786",
+  "status": "succeeded",
+  "validation": {
+    "split_id": "cifar10-train45000-val5000-pcg64-v1",
+    "split_indices_hash": "48a8983fa5fdf95d137855c818b7bc716c476396dbe5b274eec41982b27e815e",
+    "metrics": {
+      "accuracy": 0.6564,
+      "loss": 0.957753829574585
+    }
+  },
+  "runtime": {
+    "elapsed_seconds": 6.583812180997484,
+    "started_at": "2026-10-03T22:29:31.879015Z",
+    "finished_at": "2026-10-03T22:29:38.462918Z",
+    "actual_device": "cuda"
+  },
+  "error": null
+}

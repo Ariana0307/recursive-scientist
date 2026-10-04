@@ -1,14 +1,11 @@
-"""Actual Omnigent SDK entry point with explicit injected transport.
-
-The CLI ONLY runs CPU/mock. It cannot select a real network transport. Future
-real execution needs separate authorization and a trusted caller providing it.
+"""Omnigent SDK feedback. This CLI is mock-only; live uses live_feedback.
 No HandoffTool, authorizer, runner or training imports exist here.
 """
 import argparse,asyncio,json,os
 from pathlib import Path
 from typing import Literal
 import httpx
-from pydantic import model_validator
+from pydantic import model_validator,Field
 from orchestrator.research_tools import Closed,ResearchCapabilities,sha,stable_bytes
 from orchestrator.local_research import GuardedTransport,Hypothesis,Planner as DirectionPlan,sample_proposal
 
@@ -21,6 +18,21 @@ class PlanReceipt(Closed):
     hypothesis_id:Literal['H1','H2']
     proposal_id:str
     status:Literal['proposed_not_authorized']
+
+class LiveHypothesis(Hypothesis):
+    evidence_round:int=Field(ge=1,le=5)
+    result_reasoning:str=Field(min_length=10,max_length=1000)
+class LivePlanReceipt(PlanReceipt):
+    evidence_round:int=Field(ge=1,le=5)
+    selection_reasoning:str=Field(min_length=10,max_length=1000)
+
+def sampling_context(history):
+    ai=[r for r in history['records'] if r['origin']=='ai']
+    last=max(ai,key=lambda r:r['round']) if ai else None
+    return {'source_round':last['round'] if last else 0,
+            'parameters':last['parameters'] if last else {'learning_rate':.001,'weight_decay':.0001,'augmentation':'none'},
+            'status':last['status'] if last else 'baseline_only',
+            'accuracy':last['accuracy'] if last else None,'loss':last['loss'] if last else None}
 
 def expected_comparison(history):
     records=history['records'];ai=[r for r in records if r['origin']=='ai']
@@ -36,6 +48,9 @@ def put(path,value):
 async def run_feedback(capabilities,root,inner_transport,*,mode):
     if mode!=capabilities.mode:raise ValueError('execution mode mismatch')
     if mode=='cpu_mock' and not isinstance(inner_transport,httpx.MockTransport):raise ValueError('mock mode requires in-memory transport')
+    if mode=='live' and type(inner_transport) is not httpx.AsyncHTTPTransport:raise ValueError('live requires real loopback HTTP transport; mock forbidden')
+    history=json.loads(capabilities._history_bytes);context=sampling_context(history)
+    if mode=='live' and context['source_round']==0:raise ValueError('actual AI result required')
     root=Path(root);root.mkdir(parents=True,exist_ok=True)
     os.environ['OMNIGENT_DATA_DIR']=str(root/'omnigent-state')
     from importlib.metadata import version
@@ -44,24 +59,27 @@ async def run_feedback(capabilities,root,inner_transport,*,mode):
     from omnigent.inner.openai_agents_sdk_executor import OpenAIAgentsSDKExecutor
     from omnigent.inner.executor import ExecutorConfig,TextChunk,ExecutorError
     from omnigent.spec.types import RetryPolicy
-    transport=GuardedTransport(root,inner_transport,allowed_tool_names=[s['name'] for s in capabilities.specs()])
+    transport=GuardedTransport(root,inner_transport,allowed_tool_names=[s['name'] for s in capabilities.specs()],max_requests=8)
     client=AsyncOpenAI(base_url='http://127.0.0.1:11434/v1',api_key='local-unused',max_retries=0,timeout=120,
         http_client=httpx.AsyncClient(transport=transport,timeout=120,trust_env=False))
     executor=OpenAIAgentsSDKExecutor(client=client,use_responses=False,model='qwen3:4b',retry_policy=RetryPolicy(max_retries=0,timeout_per_request_s=120))
     transport.executor=executor;previous=None;hypotheses=None;sampled={}
     try:
-        for role,schema in [('Evaluator',Evaluation),('Hypothesis',Hypothesis),('Planner',PlanReceipt)]:
+        for role,schema in [('Evaluator',Evaluation),('Hypothesis',LiveHypothesis if mode=='live' else Hypothesis),('Planner',LivePlanReceipt if mode=='live' else PlanReceipt)]:
             capabilities.phase=role;specs=capabilities.register(executor)
             transport.role=role;transport.schema=schema.model_json_schema()
-            session='G5-'+root.name+'-'+role
+            session='G6-'+root.name+'-'+role
             # No worker plan, random catalog, hidden arm result, or path enters input.
-            inp={'role':role,'mode':mode,'previous_output':previous,'history_sha256':capabilities.snapshot_hash}
+            inp={'role':role,'mode':mode,'previous_output':previous,'history_sha256':capabilities.snapshot_hash,'verified_history':history,'sampling_context':context}
             if role=='Planner':inp['trusted_sampled_candidates']=sampled
             put(root/f'{role}-input.json',inp)
             instruction=('ROLE='+role+'\nUse only read_ai_history and validated predecessor evidence. '
               'Never access Random/test data, grant authorization or train. Return JSON matching '+json.dumps(schema.model_json_schema())+'. '
               'Evaluator must call read_ai_history before evaluating. Hypothesis proposes two distinct exploratory directions. '
               'Planner must submit one trusted sampled candidate via submit_experiment_proposal, then return its actual receipt. '
+              'For post-experiment feedback, explain how the actual latest AI outcome supports or weakens each direction and the final choice. '
+              'Use evidence_round equal to the latest completed AI round. Null metrics mean failure, not poor accuracy. '
+              'A retained configuration is allowed; a changed option is not evidence of causal or scientific success. '
               'When current AI round is 1, preserve learning_rate=.003, weight_decay=.0001, augmentation=none. /no_think')
             text='';events=[]
             try:
@@ -76,11 +94,15 @@ async def run_feedback(capabilities,root,inner_transport,*,mode):
                 if role=='Evaluator':
                     if not any(x['phase']==role and x['tool']=='read_ai_history' for x in capabilities.audit):raise ValueError('Evaluator did not read verified history')
                     if parsed.comparison!=expected_comparison(json.loads(capabilities._history_bytes)):raise ValueError('Evaluator contradicts verified metrics')
+                if mode=='live' and role in ('Hypothesis','Planner') and parsed.evidence_round!=context['source_round']:
+                    raise ValueError('reasoning must reference latest completed AI round')
                 if role=='Hypothesis':
                     hypotheses=parsed
                     for candidate in parsed.candidates:
                         d=DirectionPlan(role='Planner',hypothesis_id=candidate.hypothesis_id,variable=candidate.variable,direction=candidate.direction,action='propose_only_no_dispatch')
-                        proposal=sample_proposal(d,parsed)['parameters']
+                        sample=sample_proposal(d,parsed,context_parameters=context['parameters'])
+                        put(root/f'sampling-{candidate.hypothesis_id}.json',{'history_sha256':capabilities.snapshot_hash,'context':context,'sample':sample})
+                        proposal=sample['parameters']
                         sampled[candidate.hypothesis_id]={k:proposal[k] for k in ('learning_rate','weight_decay','augmentation')}
                 if role=='Planner':
                     receipt=capabilities.receipt
@@ -112,7 +134,7 @@ def mock_transport(capabilities):
         if role=='Evaluator' and not tool_seen:
             delta={'role':'assistant','tool_calls':[{'index':0,'id':'mock-read','type':'function','function':{'name':'read_ai_history','arguments':json.dumps({'view':'ai_visible_history'})}}]};finish='tool_calls'
         elif role=='Planner' and not tool_seen:
-            delta={'role':'assistant','tool_calls':[{'index':0,'id':'mock-submit','type':'function','function':{'name':'submit_experiment_proposal','arguments':json.dumps({'learning_rate':.003,'weight_decay':.0001,'augmentation':'none'})}}]};finish='tool_calls'
+            delta={'role':'assistant','tool_calls':[{'index':0,'id':'mock-submit','type':'function','function':{'name':'submit_experiment_proposal','arguments':json.dumps(json.loads(next(m['content'] for m in body['messages'] if m['role']=='user'))['trusted_sampled_candidates']['H1'])}}]};finish='tool_calls'
         else:
             if role=='Evaluator':obj={'role':role,'comparison':expected_comparison(json.loads(capabilities._history_bytes)),'interpretation':'exploratory_not_significance'}
             elif role=='Hypothesis':obj={'role':role,'candidates':[{'hypothesis_id':'H1','variable':'learning_rate','direction':'higher','prediction':'validation_accuracy_may_increase'},{'hypothesis_id':'H2','variable':'weight_decay','direction':'lower','prediction':'effect_uncertain'}],'uncertainty':'untested_no_causal_evidence'}
